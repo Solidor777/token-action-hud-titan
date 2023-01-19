@@ -13,8 +13,9 @@ export class ActionHandler extends CoreActionHandler {
      * @param {array} subcategoryIds
      * @returns {object}
      */
-    async buildSystemActions (actionList, character, subcategoryIds) {
+    async buildSystemActions(actionList, character, subcategoryIds) {
         const actor = character?.actor
+        console.log(actionList);
 
         if (actor?.type === 'character' || actor?.type === 'npc') {
             return this._buildCharacterActions(actionList, character, subcategoryIds)
@@ -35,7 +36,7 @@ export class ActionHandler extends CoreActionHandler {
      * @param {array} subcategoryIds
      * @returns {object}
      */
-    async _buildCharacterActions (actionList, character, subcategoryIds) {
+    async _buildCharacterActions(actionList, character, subcategoryIds) {
         const inventorySubcategoryIds = subcategoryIds.filter((subcategoryId) =>
             subcategoryId === 'equipped' ||
             subcategoryId === 'consumables' ||
@@ -129,7 +130,7 @@ export class ActionHandler extends CoreActionHandler {
      * @param {array} subcategoryIds
      * @returns {object}
      */
-    async _buildVehicleActions (actionList, character, subcategoryIds) {
+    async _buildVehicleActions(actionList, character, subcategoryIds) {
         const inventorySubcategoryIds = subcategoryIds.filter((subcategoryId) =>
             subcategoryId === 'consumables' ||
             subcategoryId === 'equipment' ||
@@ -184,7 +185,7 @@ export class ActionHandler extends CoreActionHandler {
      * @param {array} subcategoryIds
      * @returns {object}
      */
-    async _buildMultipleTokenActions (actionList, subcategoryIds) {
+    async _buildMultipleTokenActions(actionList, subcategoryIds) {
         const character = { actor: { id: 'multi' }, token: { id: 'multi' } }
 
         if (subcategoryIds.some((subcategoryId) => subcategoryId === 'abilities')) {
@@ -236,13 +237,13 @@ export class ActionHandler extends CoreActionHandler {
      * @param {string} actionType
      * @param {string} subcategoryId
      */
-    _buildAbilities (actionList, character, actionType, subcategoryId) {
+    _buildAbilities(actionList, character, actionType, subcategoryId) {
         const actor = character?.actor
         const actorId = character?.actor?.id
         const tokenId = character.token?.id
         const abbr = getSetting('abbreviateSkills')
 
-        const abilities = (actorId === 'multi') ? game.dnd5e.config.abilities : actor.system.abilities
+        const abilities = (actorId === 'multi') ? game.titan.config.abilities : actor.system.abilities
 
         if (abilities.length === 0) return
 
@@ -252,7 +253,7 @@ export class ActionHandler extends CoreActionHandler {
             .map((ability) => {
                 const id = ability[0]
                 const abbreviatedName = id.charAt(0).toUpperCase() + id.slice(1)
-                const name = abbr ? abbreviatedName : game.dnd5e.config.abilities[id]
+                const name = abbr ? abbreviatedName : game.titan.config.abilities[id]
                 const encodedValue = [actionType, actorId, tokenId, id].join(
                     this.delimiter
                 )
@@ -280,7 +281,7 @@ export class ActionHandler extends CoreActionHandler {
      * @param {object} character The actor and/or token
      * @param {array} actionSubcategoryIds The action subcategory IDs
      */
-    _buildActions (actionList, character, actionSubcategoryIds) {
+    _buildActions(actionList, character, actionSubcategoryIds) {
         const actor = character?.actor
         if (!actor) return
 
@@ -294,27 +295,27 @@ export class ActionHandler extends CoreActionHandler {
         actionSubcategoryIds.forEach(actionSubcategoryId => {
             let activationType = null
             switch (actionSubcategoryId) {
-            case 'actions':
-                activationType = 'action'
-                break
-            case 'bonus-actions':
-                activationType = 'bonus'
-                break
-            case 'crew-actions':
-                activationType = 'crew'
-                break
-            case 'lair-actions':
-                activationType = 'lair'
-                break
-            case 'legendary-actions':
-                activationType = 'legendary'
-                break
-            case 'reactions':
-                activationType = 'reaction'
-                break
-            case 'other-actions':
-                activationType = ''
-                break
+                case 'actions':
+                    activationType = 'action'
+                    break
+                case 'bonus-actions':
+                    activationType = 'bonus'
+                    break
+                case 'crew-actions':
+                    activationType = 'crew'
+                    break
+                case 'lair-actions':
+                    activationType = 'lair'
+                    break
+                case 'legendary-actions':
+                    activationType = 'legendary'
+                    break
+                case 'reactions':
+                    activationType = 'reaction'
+                    break
+                case 'other-actions':
+                    activationType = ''
+                    break
             }
 
             const itemsByActivationType = items.filter(item => item.system?.activation?.type === activationType)
@@ -329,14 +330,14 @@ export class ActionHandler extends CoreActionHandler {
      * @param {object} actionList
      * @param {object} character
      */
-    _buildCombat (actionList, character) {
+    _buildCombat(actionList, character) {
         const actorId = character?.actor?.id
         const tokenId = character?.token?.id
         const actionType = 'utility'
         const subcategoryId = 'combat'
 
         const combatTypes = {
-            initiative: { id: 'initiative', name: this.i18n('tokenActionHud.dnd5e.rollInitiative') },
+            initiative: { id: 'initiative', name: this.i18n('tokenActionHud.titan.rollInitiative') },
             endTurn: { id: 'endTurn', name: this.i18n('tokenActionHud.endTurn') }
         }
 
@@ -385,7 +386,7 @@ export class ActionHandler extends CoreActionHandler {
      * @param {object} actionList
      * @param {object} character
      */
-    _buildConditions (actionList, character) {
+    _buildConditions(actionList, character) {
         if (!character?.token) return
         const actor = character?.actor
         const actorId = character?.actor?.id
@@ -433,7 +434,7 @@ export class ActionHandler extends CoreActionHandler {
      * @param {object} actionList
      * @param {object} character
      */
-    _buildEffects (actionList, character, effectSubcategoryIds) {
+    _buildEffects(actionList, character, effectSubcategoryIds) {
         const actor = character?.actor
         const actionType = 'effect'
 
@@ -461,7 +462,7 @@ export class ActionHandler extends CoreActionHandler {
      * @param {object} actionList
      * @param {object} character
      */
-    _buildFeatures (actionList, character, featureSubcategoryIds) {
+    _buildFeatures(actionList, character, featureSubcategoryIds) {
         const actor = character?.actor
         const actionType = 'feature'
 
@@ -505,7 +506,7 @@ export class ActionHandler extends CoreActionHandler {
      * @param {object} character
      * @param {array} inventorySubcategoryIds
      */
-    _buildInventory (actionList, character, inventorySubcategoryIds) {
+    _buildInventory(actionList, character, inventorySubcategoryIds) {
         const actor = character?.actor
 
         const validItems = this._discardSlowItems(
@@ -594,7 +595,7 @@ export class ActionHandler extends CoreActionHandler {
      * @param {object} items
      * @param {string} subcategoryId
      */
-    _buildItems (actionList, character, items, subcategoryId, actionType = 'item') {
+    _buildItems(actionList, character, items, subcategoryId, actionType = 'item') {
         if (items.length === 0) return
 
         const actions = items.map((item) =>
@@ -610,10 +611,10 @@ export class ActionHandler extends CoreActionHandler {
      * @param {object} equipment
      * @returns {object}
      */
-    _getActiveEquipment (equipment) {
+    _getActiveEquipment(equipment) {
         let activeEquipment = []
         if (!getSetting('showItemsWithoutActivationCosts')) {
-            const activationTypes = Object.keys(game.dnd5e.config.abilityActivationTypes)
+            const activationTypes = Object.keys(game.titan.config.abilityActivationTypes)
                 .filter((at) => at !== 'none')
 
             activeEquipment = equipment.filter((e) => {
@@ -637,7 +638,7 @@ export class ActionHandler extends CoreActionHandler {
      * @param {object} entity
      * @returns {object}
      */
-    _getAction (actionType, character, entity) {
+    _getAction(actionType, character, entity) {
         const actor = character?.actor
         const actorId = character?.actor?.id
         const tokenId = character?.token?.id
@@ -648,7 +649,7 @@ export class ActionHandler extends CoreActionHandler {
             !entity?.system?.recharge?.charged &&
             entity?.system?.recharge?.value
         ) {
-            name += ` (${this.i18n('DND5E.Recharge')})`
+            name += ` (${this.i18n('TITAN.Recharge')})`
         }
         let cssClass = ''
         if (Object.hasOwn(entity, 'disabled')) {
@@ -687,7 +688,7 @@ export class ActionHandler extends CoreActionHandler {
      * @param {object} item
      * @returns {object}
      */
-    _getItemInfo (actor, item) {
+    _getItemInfo(actor, item) {
         return {
             info1: this._getQuantityData(item) ?? '',
             info2: this._getUsesData(item) ?? '',
@@ -700,7 +701,7 @@ export class ActionHandler extends CoreActionHandler {
      * @param {object} actionList
      * @param {object} character
      */
-    _buildRests (actionList, character) {
+    _buildRests(actionList, character) {
         const actor = character?.actor
         const actorId = character?.actor?.id
         const tokenId = character?.token?.id
@@ -710,8 +711,8 @@ export class ActionHandler extends CoreActionHandler {
         const subcategoryId = 'rests'
 
         const restTypes = {
-            shortRest: { name: this.i18n('DND5E.ShortRest') },
-            longRest: { name: this.i18n('DND5E.LongRest') }
+            shortRest: { name: this.i18n('TITAN.ShortRest') },
+            longRest: { name: this.i18n('TITAN.LongRest') }
         }
 
         const actions = Object.entries(restTypes)
@@ -736,7 +737,7 @@ export class ActionHandler extends CoreActionHandler {
      * @param {object} actionList
      * @param {object} character
      */
-    _buildSkills (actionList, character) {
+    _buildSkills(actionList, character) {
         const actor = character?.actor
         const actorId = character?.actor?.id
         const tokenId = character?.token?.id
@@ -744,7 +745,7 @@ export class ActionHandler extends CoreActionHandler {
         const abbr = getSetting('abbreviateSkills')
 
         // Get skills
-        const skills = (actorId === 'multi') ? game.dnd5e.config.skills : actor.system.skills
+        const skills = (actorId === 'multi') ? game.titan.config.skills : actor.system.skills
 
         if (skills.length === 0) return
 
@@ -754,7 +755,7 @@ export class ActionHandler extends CoreActionHandler {
                 try {
                     const id = skill[0]
                     const abbreviatedName = id.charAt(0).toUpperCase() + id.slice(1)
-                    const name = abbr ? abbreviatedName : game.dnd5e.config.skills[id].label
+                    const name = abbr ? abbreviatedName : game.titan.config.skills[id].label
                     const encodedValue = [actionType, actorId, tokenId, id].join(
                         this.delimiter
                     )
@@ -780,7 +781,7 @@ export class ActionHandler extends CoreActionHandler {
      * @param {object} actionList
      * @param {object} character
      */
-    _buildSpells (actionList, character) {
+    _buildSpells(actionList, character) {
         const actor = character?.actor
         const actionType = 'spell'
 
@@ -865,36 +866,36 @@ export class ActionHandler extends CoreActionHandler {
         for (const spellLevel of spellLevels) {
             let subcategoryId = null
             switch (spellLevel) {
-            case 0:
-                subcategoryId = 'cantrips'
-                break
-            case 1:
-                subcategoryId = '1st-level-spells'
-                break
-            case 2:
-                subcategoryId = '2nd-level-spells'
-                break
-            case 3:
-                subcategoryId = '3rd-level-spells'
-                break
-            case 4:
-                subcategoryId = '4th-level-spells'
-                break
-            case 5:
-                subcategoryId = '5th-level-spells'
-                break
-            case 6:
-                subcategoryId = '6th-level-spells'
-                break
-            case 7:
-                subcategoryId = '7th-level-spells'
-                break
-            case 8:
-                subcategoryId = '8th-level-spells'
-                break
-            case 9:
-                subcategoryId = '9th-level-spells'
-                break
+                case 0:
+                    subcategoryId = 'cantrips'
+                    break
+                case 1:
+                    subcategoryId = '1st-level-spells'
+                    break
+                case 2:
+                    subcategoryId = '2nd-level-spells'
+                    break
+                case 3:
+                    subcategoryId = '3rd-level-spells'
+                    break
+                case 4:
+                    subcategoryId = '4th-level-spells'
+                    break
+                case 5:
+                    subcategoryId = '5th-level-spells'
+                    break
+                case 6:
+                    subcategoryId = '6th-level-spells'
+                    break
+                case 7:
+                    subcategoryId = '7th-level-spells'
+                    break
+                case 8:
+                    subcategoryId = '8th-level-spells'
+                    break
+                case 9:
+                    subcategoryId = '9th-level-spells'
+                    break
             }
             const spellLevelId = spellLevel
             const isPrep = !!(
@@ -942,7 +943,7 @@ export class ActionHandler extends CoreActionHandler {
      * @param {object} spells
      * @returns {object}
      */
-    _sortSpellsByLevel (spells) {
+    _sortSpellsByLevel(spells) {
         const spellsArray = Object.keys(spells).map(key => spells[key])
         spellsArray.sort((a, b) => {
             if (a.system.level === b.system.level) {
@@ -958,7 +959,7 @@ export class ActionHandler extends CoreActionHandler {
      * @param {object} spell
      * @param {object} action
      */
-    _addSpellInfo (spell, action) {
+    _addSpellInfo(spell, action) {
         const components = spell.system.components
 
         action.info1 = ''
@@ -966,23 +967,23 @@ export class ActionHandler extends CoreActionHandler {
         action.info3 = ''
 
         if (components?.vocal) {
-            action.info1 += this.i18n('DND5E.ComponentVerbal').charAt(0).toUpperCase()
+            action.info1 += this.i18n('TITAN.ComponentVerbal').charAt(0).toUpperCase()
         }
 
         if (components?.somatic) {
-            action.info1 += this.i18n('DND5E.ComponentSomatic').charAt(0).toUpperCase()
+            action.info1 += this.i18n('TITAN.ComponentSomatic').charAt(0).toUpperCase()
         }
 
         if (components?.material) {
-            action.info1 += this.i18n('DND5E.ComponentMaterial').charAt(0).toUpperCase()
+            action.info1 += this.i18n('TITAN.ComponentMaterial').charAt(0).toUpperCase()
         }
 
         if (components?.concentration) {
-            action.info2 += this.i18n('DND5E.Concentration').charAt(0).toUpperCase()
+            action.info2 += this.i18n('TITAN.Concentration').charAt(0).toUpperCase()
         }
 
         if (components?.ritual) {
-            action.info3 += this.i18n('DND5E.Ritual').charAt(0).toUpperCase()
+            action.info3 += this.i18n('TITAN.Ritual').charAt(0).toUpperCase()
         }
     }
 
@@ -992,7 +993,7 @@ export class ActionHandler extends CoreActionHandler {
      * @param {object} actionList
      * @param {object} character
      */
-    _buildUtility (actionList, character) {
+    _buildUtility(actionList, character) {
         const actor = character?.actor
         const actorId = character?.actor?.id
         const tokenId = character?.token?.id
@@ -1002,8 +1003,8 @@ export class ActionHandler extends CoreActionHandler {
         const subcategoryId = 'utility'
 
         const utilityTypes = {
-            deathSave: { name: this.i18n('DND5E.DeathSave') },
-            inspiration: { name: this.i18n('DND5E.Inspiration') }
+            deathSave: { name: this.i18n('TITAN.DeathSave') },
+            inspiration: { name: this.i18n('TITAN.Inspiration') }
         }
 
         // Delete 'deathSave' for multiple tokens
@@ -1039,7 +1040,7 @@ export class ActionHandler extends CoreActionHandler {
      * @private
      * @returns {object}
      */
-    _getActors () {
+    _getActors() {
         const allowedTypes = ['character', 'npc']
         const actors = canvas.tokens.controlled.map((token) => token.actor)
         if (actors.every((actor) => allowedTypes.includes(actor.type))) {
@@ -1053,7 +1054,7 @@ export class ActionHandler extends CoreActionHandler {
      * @param {object} item
      * @returns {string}
      */
-    _getQuantityData (item) {
+    _getQuantityData(item) {
         const quantity = item?.system?.quantity
         return (quantity > 1) ? quantity : ''
     }
@@ -1064,7 +1065,7 @@ export class ActionHandler extends CoreActionHandler {
      * @param {object} item
      * @returns {string}
      */
-    _getUsesData (item) {
+    _getUsesData(item) {
         let result = ''
 
         const uses = item?.system?.uses
@@ -1086,7 +1087,7 @@ export class ActionHandler extends CoreActionHandler {
      * @param {object} actor
      * @returns {string}
      */
-    _getConsumeData (item, actor) {
+    _getConsumeData(item, actor) {
         let result = ''
 
         const consumeType = item?.system?.consume?.type
@@ -1131,7 +1132,7 @@ export class ActionHandler extends CoreActionHandler {
      * @param {object} items
      * @returns {object}
      */
-    _discardSlowItems (items) {
+    _discardSlowItems(items) {
         let result
 
         if (!getSetting('showSlowActions')) {
@@ -1156,10 +1157,10 @@ export class ActionHandler extends CoreActionHandler {
      * @param {object} spells
      * @returns {object}
      */
-    _discardNonPreparedSpells (actor, spells) {
+    _discardNonPreparedSpells(actor, spells) {
         if (actor.type !== 'character' && getSetting('showUnequippedItems')) return
 
-        const nonpreparableSpells = Object.keys(game.dnd5e.config.spellPreparationModes)
+        const nonpreparableSpells = Object.keys(game.titan.config.spellPreparationModes)
             .filter((p) => p !== 'prepared')
 
         let result = spells
@@ -1184,7 +1185,7 @@ export class ActionHandler extends CoreActionHandler {
      * @param {object} items
      * @returns {object}
      */
-    _discardExpendedItems (items) {
+    _discardExpendedItems(items) {
         if (getSetting('showUnchargedItems')) return items
 
         return items.filter((item) => {
@@ -1204,7 +1205,7 @@ export class ActionHandler extends CoreActionHandler {
      * @param {string} level
      * @returns {string}
      */
-    _getProficiencyIcon (level) {
+    _getProficiencyIcon(level) {
         const icons = {
             0: '',
             0.5: '<i class="fas fa-adjust"></i>',
@@ -1219,7 +1220,7 @@ export class ActionHandler extends CoreActionHandler {
      * @param {object} action
      * @returns {string}
      */
-    _getIcon (action) {
+    _getIcon(action) {
         const img = {
             bonus: '<i class="fas fa-plus"></i>',
             crew: '<i class="fas fa-users"></i>',

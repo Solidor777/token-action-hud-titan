@@ -1,12 +1,12 @@
-export function register (updateFunc) {
-    const appName = 'token-action-hud-dnd5e'
+export function register(updateFunc) {
+    const appName = 'token-action-hud-titan'
 
     game.settings.register(appName, 'abbreviateSkills', {
         name: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.abbreviateSkills.name'
+            'tokenActionHud.titan.settings.abbreviateSkills.name'
         ),
         hint: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.abbreviateSkills.hint'
+            'tokenActionHud.titan.settings.abbreviateSkills.hint'
         ),
         scope: 'client',
         config: true,
@@ -19,10 +19,10 @@ export function register (updateFunc) {
 
     game.settings.register(appName, 'showSlowActions', {
         name: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.showSlowActions.name'
+            'tokenActionHud.titan.settings.showSlowActions.name'
         ),
         hint: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.showSlowActions.hint'
+            'tokenActionHud.titan.settings.showSlowActions.hint'
         ),
         scope: 'client',
         config: true,
@@ -35,10 +35,10 @@ export function register (updateFunc) {
 
     game.settings.register(appName, 'displaySpellInfo', {
         name: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.displaySpellInfo.name'
+            'tokenActionHud.titan.settings.displaySpellInfo.name'
         ),
         hint: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.displaySpellInfo.hint'
+            'tokenActionHud.titan.settings.displaySpellInfo.hint'
         ),
         scope: 'client',
         config: true,
@@ -51,10 +51,10 @@ export function register (updateFunc) {
 
     game.settings.register(appName, 'showUnchargedItems', {
         name: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.showUnchargedItems.name'
+            'tokenActionHud.titan.settings.showUnchargedItems.name'
         ),
         hint: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.showUnchargedItems.hint'
+            'tokenActionHud.titan.settings.showUnchargedItems.hint'
         ),
         scope: 'client',
         config: true,
@@ -67,10 +67,10 @@ export function register (updateFunc) {
 
     game.settings.register(appName, 'showUnequippedItems', {
         name: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.showUnequippedItems.name'
+            'tokenActionHud.titan.settings.showUnequippedItems.name'
         ),
         hint: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.showUnequippedItems.hint'
+            'tokenActionHud.titan.settings.showUnequippedItems.hint'
         ),
         scope: 'client',
         config: true,
@@ -83,10 +83,10 @@ export function register (updateFunc) {
 
     game.settings.register(appName, 'showUnpreparedSpells', {
         name: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.showUnpreparedSpells.name'
+            'tokenActionHud.titan.settings.showUnpreparedSpells.name'
         ),
         hint: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.showUnpreparedSpells.hint'
+            'tokenActionHud.titan.settings.showUnpreparedSpells.hint'
         ),
         scope: 'client',
         config: true,
@@ -99,10 +99,10 @@ export function register (updateFunc) {
 
     game.settings.register(appName, 'showItemsWithoutActivationCosts', {
         name: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.showItemsWithoutActivationCosts.name'
+            'tokenActionHud.titan.settings.showItemsWithoutActivationCosts.name'
         ),
         hint: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.showItemsWithoutActivationCosts.hint'
+            'tokenActionHud.titan.settings.showItemsWithoutActivationCosts.hint'
         ),
         scope: 'client',
         config: true,
