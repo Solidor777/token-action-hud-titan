@@ -143,7 +143,7 @@ export class RollHandler extends CoreRollHandler {
 
         magicItemActor.roll(itemId, magicEffectId)
 
-        Hooks.callAll('forceUpdateTokenActionHud')
+        Hooks.callAll('forceUpdateTokenActionHUD')
     }
 
     /**
@@ -232,12 +232,12 @@ export class RollHandler extends CoreRollHandler {
         case 'toggleCombat':
             if (canvas.tokens.controlled.length === 0) break
             await canvas.tokens.controlled[0].toggleCombat()
-            Hooks.callAll('forceUpdateTokenActionHud')
+            Hooks.callAll('forceUpdateTokenActionHUD')
             break
         case 'toggleVisibility':
             if (!token) break
             token.toggleVisibility()
-            Hooks.callAll('forceUpdateTokenActionHud')
+            Hooks.callAll('forceUpdateTokenActionHUD')
             break
         }
     }
@@ -253,7 +253,7 @@ export class RollHandler extends CoreRollHandler {
 
         await actor.rollInitiative({ createCombatants: true })
 
-        Hooks.callAll('forceUpdateTokenActionHud')
+        Hooks.callAll('forceUpdateTokenActionHUD')
     }
 
     /**
@@ -271,7 +271,7 @@ export class RollHandler extends CoreRollHandler {
             const effectLabel = effect.label
             game.dfreds.effectInterface._toggleEffect(effectLabel)
         } else {
-            const condition = this.findCondition(actionId)
+            const condition = this._getCondition(actionId)
             if (!condition) return
 
             isRightClick
@@ -279,7 +279,7 @@ export class RollHandler extends CoreRollHandler {
                 : await token.toggleEffect(condition)
         }
 
-        Hooks.callAll('forceUpdateTokenActionHud')
+        Hooks.callAll('forceUpdateTokenActionHUD')
     }
 
     /**
@@ -288,8 +288,8 @@ export class RollHandler extends CoreRollHandler {
      * @param {string} actionId
      * @returns {object}
      */
-    findCondition (id) {
-        return CONFIG.statusEffects.find((effect) => effect.id === id)
+    _getCondition (actionId) {
+        return CONFIG.statusEffects.find((effect) => effect.id === actionId)
     }
 
     /**
@@ -306,14 +306,14 @@ export class RollHandler extends CoreRollHandler {
 
         if (!effect) return
 
-        const isRightClick = this.isRightClick(event)
-
-        if (isRightClick) {
-            await effect.delete()
-        } else {
-            await effect.update({ disabled: !effect.disabled })
+        const statusId = effect.flags.core?.statusId
+        if (tokenId && statusId) {
+            await this._toggleCondition(event, tokenId, statusId, effect)
+            return
         }
 
-        Hooks.callAll('forceUpdateTokenActionHud')
+        await effect.update({ disabled: !effect.disabled })
+
+        Hooks.callAll('forceUpdateTokenActionHUD')
     }
 }

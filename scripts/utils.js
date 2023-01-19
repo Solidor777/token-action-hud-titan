@@ -10,9 +10,9 @@ const namespace = 'token-action-hud-titan'
  */
 export function getSetting(key, defaultValue = null) {
     let value = defaultValue ?? null
-    try {
+    if (game.settings.settings.get(`${namespace}.${key}`)) {
         value = game.settings.get(namespace, key)
-    } catch {
+    } else {
         Logger.debug(`Setting '${key}' not found`)
     }
     return value
@@ -32,6 +32,12 @@ export async function setSetting(key, value) {
     }
 }
 
-export function localize(label) {
-    return game.i18n.localize(`tokenActionHud.titan.${label}.label`);
+/**
+ * Import a default class
+ * @param {string} path The path of the file
+ */
+export async function importClass(path) {
+    return await import(path).then(module => {
+        return module.default
+    })
 }

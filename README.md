@@ -22,7 +22,7 @@ Token Action HUD is a repositionable HUD of actions for a selected token.
 ## Method 2
 1. On Foundry VTT's **Configuration and Setup** screen, go to **Add-on Modules**
 2. Click **Install Module**
-3. In the Manifest URL field, paste: `https://github.com/Larkinabout/fvtt-token-action-hud-dnd5e/releases/latest/download/module.json`
+3. In the Manifest URL field, paste: `https://github.com/Larkinabout/fvtt-token-action-hud-titan/releases/latest/download/module.json`
 4. Click **Install** next to the pasted Manifest URL
 
 ## Required Modules
