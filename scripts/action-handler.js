@@ -14,8 +14,6 @@ export default class ActionHandler extends CoreActionHandler {
          }
       });
 
-      console.log(actionList);
-
       return;
    }
 
@@ -29,7 +27,6 @@ export default class ActionHandler extends CoreActionHandler {
     */
    async buildSystemActions(actionList, character, subcategoryIds) {
       const actor = character?.actor
-      console.log(actionList);
 
       // Single actor actions
       if (actor) {
@@ -47,6 +44,7 @@ export default class ActionHandler extends CoreActionHandler {
       this._buildSkillsSubcategory(actionList, actorId, tokenId);
       this._buildResistancesSubcategory(actionList, actorId, tokenId);
       this._buildWeaponsCategory(actionList, actorId, tokenId, actor);
+      this._buildEquipmentSubcategory(actionList, actorId, tokenId, actor);
 
       return actionList;
    }
@@ -130,8 +128,8 @@ export default class ActionHandler extends CoreActionHandler {
    }
 
    _buildWeaponsCategory(actionList, actorId, tokenId, actor) {
-      // For each appropriate item
-      const weapons = actor.items.filter((item) => {
+      // Filter and sort items
+      const items = actor.items.filter((item) => {
          return item.type === 'weapon'
             && (item.system.attack.length > 0 || item.system.check.length > 0)
             && getSetting('showUnEquippedEquipment') || item.system.equipped;
@@ -147,7 +145,7 @@ export default class ActionHandler extends CoreActionHandler {
          });
 
       // Build the subcategory
-      weapons.forEach((weapon) => this._buildWeaponSubcategory(actionList, actorId, tokenId, weapon));
+      items.forEach((weapon) => this._buildWeaponSubcategory(actionList, actorId, tokenId, weapon));
    }
 
    _buildWeaponSubcategory(actionList, actorId, tokenId, weapon) {
@@ -157,7 +155,7 @@ export default class ActionHandler extends CoreActionHandler {
       // Build attack actions
       const attacks = weapon.system.attack.map((attack, idx) => {
          return {
-            id: `${weaponId}|attack|${idx}`,
+            id: `${weaponId},attack,${idx}`,
             name: attack.label,
             encodedValue: [actorId, tokenId, 'attackCheck', weaponId, idx],
             icon: attack.type === 'melee' ? '<i class="fas fa-sword"></i>' : '<i class="fas fa-bow-arrow"></i>'
@@ -167,7 +165,7 @@ export default class ActionHandler extends CoreActionHandler {
       // Build item check actions
       const itemChecks = weapon.system.check.map((check, idx) => {
          return {
-            id: `${weaponId}|itemCheck|${idx}`,
+            id: `${weaponId},itemCheck,${idx}`,
             name: check.label,
             encodedValue: [actorId, tokenId, 'itemCheck', weaponId, idx],
             icon: '<i class="fas fa-dice"></i>'
@@ -184,8 +182,61 @@ export default class ActionHandler extends CoreActionHandler {
 
       // Add the subcategory and actions to the action list
       const subcategory = this.initializeEmptySubcategory(weaponId, 'weapons', weapon.name, 'system');
+      subcategory.img = this.getImage(weapon);
       this._addSubcategoryToCategory(actionList, subcategory, 'weapons');
 
       return this.addActionsToActionList(actionList, [...attacks, ...itemChecks, toggleMultiAttack], weaponId);
+   }
+
+   _buildEquipmentSubcategory(actionList, actorId, tokenId, actor) {
+      // Filter and sort items
+      const items = actor.items.filter((item) => {
+         if (item.system.check.length > 0) {
+            switch (item.type) {
+               case 'weapon':
+               case 'ability':
+               case 'spell': {
+                  return false;
+               }
+               case 'armor': {
+                  return getSetting('showUnEquippedEquipment') || actor.system.equipped.armor === item._id;
+               }
+
+               case 'shield': {
+                  return getSetting('showUnEquippedEquipment') || actor.system.equipped.shield === item._id;
+               }
+
+               default: {
+                  return getSetting('showUnEquippedEquipment') || item.system.equipped === undefined ? true : item.system.equipped;
+               }
+            }
+         }
+      }).sort((a, b) => {
+         if (a.sort < b.sort) {
+            return -1;
+         }
+         if (a.sort > b.sort) {
+            return 1;
+         }
+         return 0;
+      });
+
+      const actions = [];
+
+      // Add item checks
+      items.forEach((item) => {
+         const itemId = item._id;
+         item.system.check.forEach((check, idx) => {
+            actions.push({
+               id: `${itemId},itemCheck`,
+               name: `${item.name} (${check.label})`,
+               encodedValue: [actorId, tokenId, 'itemCheck', itemId, idx],
+               img: this.getImage(item)
+            });
+         });
+      });
+
+      // Add actions to subcategory
+      return this.addActionsToActionList(actionList, actions, 'equipment');
    }
 }
