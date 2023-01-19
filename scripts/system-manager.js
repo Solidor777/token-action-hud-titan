@@ -99,11 +99,18 @@ export default class SystemManager extends CoreSystemManager {
                 {
                     id: 'utility',
                     title: localize('utility'),
-                    subcategories: [{
-                        id: 'utility',
-                        title: localize('utility'),
-                        type: 'system'
-                    }],
+                    subcategories: [
+                        {
+                            id: 'recovery',
+                            title: localize('recovery'),
+                            type: 'system'
+                        },
+                        {
+                            id: 'resources',
+                            title: localize('resources'),
+                            type: 'system'
+                        }
+                    ],
                 }
             ],
             subcategories: [

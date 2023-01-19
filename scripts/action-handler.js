@@ -36,10 +36,10 @@ export default class ActionHandler extends CoreActionHandler {
       }
 
       // Multi character actions
-      return this._buildMultiCharacterActions(actionList, subcategoryIds);
+      return this._buildMultiCharacterActions(actionList);
    }
 
-   _buildSingleCharacterActions(actionList, actorId, tokenId, actor, subcategoryIds) {
+   _buildSingleCharacterActions(actionList, actorId, tokenId, actor) {
       this._buildAttributesSubcategory(actionList, actorId, tokenId);
       this._buildResistancesSubcategory(actionList, actorId, tokenId);
       this._buildSkillsSubcategory(actionList, actorId, tokenId);
@@ -47,6 +47,20 @@ export default class ActionHandler extends CoreActionHandler {
       this._buildEquipmentSubcategory(actionList, actorId, tokenId, actor);
       this._buildAbilitiesCategory(actionList, actorId, tokenId, actor);
       this._buildSpellsCategory(actionList, actorId, tokenId, actor);
+      this._buildRecoverySubcategory(actionList, actorId, tokenId);
+      this._buildResourcesSubcategory(actionList, actorId, tokenId, actor);
+
+      return actionList;
+   }
+
+   _buildMultiCharacterActions(actionList) {
+      const actorId = 'multi';
+      const tokenId = 'multi';
+      this._buildAttributesSubcategory(actionList, actorId, tokenId);
+      this._buildResistancesSubcategory(actionList, actorId, tokenId);
+      this._buildSkillsSubcategory(actionList, actorId, tokenId);
+      this._buildRecoverySubcategory(actionList, actorId, tokenId);
+      this._buildResourcesSubcategory(actionList, actorId, tokenId);
 
       return actionList;
    }
@@ -331,5 +345,57 @@ export default class ActionHandler extends CoreActionHandler {
       this._addSubcategoryToCategory(actionList, subcategory, 'spells');
 
       return this.addActionsToActionList(actionList, actions, tradition);
+   }
+
+   _buildRecoverySubcategory(actionList, actorId, tokenId) {
+      // Setup actions
+      const actions = [
+         {
+            id: `longRest`,
+            name: localize('longRest'),
+            encodedValue: [actorId, tokenId, 'longRest'],
+            icon: '<i class="fas fa-bed"></i>'
+         },
+         {
+            id: `shortRest`,
+            name: localize('shortRest'),
+            encodedValue: [actorId, tokenId, 'shortRest'],
+            icon: '<i class="fas fa-face-exhaling"></i>'
+         },
+         {
+            id: `removeTemporaryEffects`,
+            name: localize('removeTemporaryEffects'),
+            encodedValue: [actorId, tokenId, 'removeTemporaryEffects'],
+            icon: '<i class="fas fa-arrow-rotate-left"></i>'
+         }
+      ];
+
+      // Add actions to list
+      return this.addActionsToActionList(actionList, actions, 'recovery');
+   }
+
+   _buildResourcesSubcategory(actionList, actorId, tokenId, actor) {
+      // Setup actions
+      const actions = [
+         {
+            id: `spendResolve`,
+            name: localize('spendResolve'),
+            encodedValue: [actorId, tokenId, 'spendResolve'],
+            icon: '<i class="fas fa-bolt"></i>'
+         }
+      ];
+
+      // Add toggle inspiration action for players
+      if (actor?.type === 'player') {
+         actions.push({
+            id: `toggleInspiration`,
+            name: localize('inspiration'),
+            encodedValue: [actorId, tokenId, 'toggleInspiration'],
+            icon: actor.system.inspiration ? '<i class="fas fa-sun"></i>' : '<i class="far fa-circle"></i>'
+         });
+      }
+
+      // Add actions to list
+      return this.addActionsToActionList(actionList, actions, 'resources');
    }
 }

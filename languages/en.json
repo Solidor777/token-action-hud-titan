@@ -37,13 +37,12 @@
       "spells.label": "Spells",
       "recovery.label": "Recovery",
       "removeTemporaryEffects.label": "Remove Temporary Effects",
-      "takeABreather.label": "Take a Breather",
-      "rest.label": "Rest",
+      "shortRest.label": "Short Rest",
+      "longRest.label": "Long Rest",
       "resources.label": "Resources",
       "spendResolve.label": "Spend Resolve",
       "utility.label": "Utility",
-      "hasInspirationTrue.label": "Has Inspiration? (True)",
-      "hasInspirationFalse.label": "Has Inspiration? (False)",
+      "inspiration.label": "Inspiration",
       "settings": {
         "showUnEquippedEquipment": {
           "label": "Show Un-equipped Equipment",
