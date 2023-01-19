@@ -1,12 +1,12 @@
 export function register(updateFunc) {
     const appName = 'token-action-hud-titan'
 
-    game.settings.register(appName, 'abbreviateSkills', {
+    game.settings.register(appName, 'showUnEquippedItems', {
         name: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.abbreviateSkills.name'
+            'tokenActionHud.titan.settings.showUnEquippedEquipment.label'
         ),
         hint: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.abbreviateSkills.hint'
+            'tokenActionHud.titan.settings.showUnEquippedEquipment.hint'
         ),
         scope: 'client',
         config: true,
@@ -15,117 +15,5 @@ export function register(updateFunc) {
         onChange: (value) => {
             updateFunc(value)
         }
-    })
-
-    game.settings.register(appName, 'showSlowActions', {
-        name: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.showSlowActions.name'
-        ),
-        hint: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.showSlowActions.hint'
-        ),
-        scope: 'client',
-        config: true,
-        type: Boolean,
-        default: true,
-        onChange: (value) => {
-            updateFunc(value)
-        }
-    })
-
-    game.settings.register(appName, 'showPassiveFeats', {
-        name: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.showPassiveFeats.name'
-        ),
-        hint: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.showPassiveFeats.hint'
-        ),
-        scope: 'client',
-        config: true,
-        type: Boolean,
-        default: true,
-        onChange: (value) => {
-            updateFunc(value)
-        }
-    })
-
-    game.settings.register(appName, 'displaySpellInfo', {
-        name: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.displaySpellInfo.name'
-        ),
-        hint: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.displaySpellInfo.hint'
-        ),
-        scope: 'client',
-        config: true,
-        type: Boolean,
-        default: true,
-        onChange: (value) => {
-            updateFunc(value)
-        }
-    })
-
-    game.settings.register(appName, 'showUnchargedItems', {
-        name: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.showUnchargedItems.name'
-        ),
-        hint: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.showUnchargedItems.hint'
-        ),
-        scope: 'client',
-        config: true,
-        type: Boolean,
-        default: false,
-        onChange: (value) => {
-            updateFunc(value)
-        }
-    })
-
-    game.settings.register(appName, 'showUnequippedItems', {
-        name: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.showUnequippedItems.name'
-        ),
-        hint: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.showUnequippedItems.hint'
-        ),
-        scope: 'client',
-        config: true,
-        type: Boolean,
-        default: true,
-        onChange: (value) => {
-            updateFunc(value)
-        }
-    })
-
-    game.settings.register(appName, 'showUnpreparedSpells', {
-        name: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.showUnpreparedSpells.name'
-        ),
-        hint: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.showUnpreparedSpells.hint'
-        ),
-        scope: 'client',
-        config: true,
-        type: Boolean,
-        default: true,
-        onChange: (value) => {
-            updateFunc(value)
-        }
-    })
-
-    game.settings.register(appName, 'showItemsWithoutActivationCosts', {
-        name: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.showItemsWithoutActivationCosts.name'
-        ),
-        hint: game.i18n.localize(
-            'tokenActionHud.dnd5e.settings.showItemsWithoutActivationCosts.hint'
-        ),
-        scope: 'client',
-        config: true,
-        type: Boolean,
-        default: false,
-        onChange: (value) => {
-            updateFunc(value)
-        }
-    })
+    });
 }

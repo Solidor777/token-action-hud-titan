@@ -1,50 +1,53 @@
 {
   "tokenActionHud": {
-    "dnd5e": {
-      "abilities": "Abilities",
-      "bonusActions": "Bonus Actions",
-      "checks": "Checks",
-      "conditions": "Conditions",
-      "crewActions": "Crew Actions",
-      "lair": "Lair",
-      "lairActions": "Lair Actions",
-      "legendary": "Legendary",
-      "legendaryActions": "Legendary Actions",
-      "otherActions": "Other Actions",
-      "rests": "Rests",
-      "skills": "Skills",
+    "titan": {
+      "skillsAndAttributes.label": "Skills & Attributes",
+      "attributes.label": "Attributes",
+      "resistances.label": "Resistances",
+      "skills.label": "Skills",
+      "body.label": "Body",
+      "mind.label": "Mind",
+      "soul.label": "Soul",
+      "reflexes.label": "Reflexes",
+      "resilience.label": "Resilience",
+      "willpower.label": "Willpower",
+      "arcana.label": "Arcana",
+      "athletics.label": "Athletics",
+      "deception.label": "Deception",
+      "dexterity.label": "Dexterity",
+      "diplomacy.label": "Diplomacy",
+      "engineering.label": "Engineering",
+      "intimidation.label": "Intimidation",
+      "investigation.label": "Investigation",
+      "lore.label": "Lore",
+      "medicine.label": "Medicine",
+      "meleeWeapons.label": "Melee Weapons",
+      "metaphysics.label": "Metaphysics",
+      "nature.label": "Nature",
+      "perception.label": "Perception",
+      "performance.label": "Performance",
+      "rangedWeapons.label": "Ranged Weapons",
+      "subterfuge.label": "Subterfuge",
+      "stealth.label": "Stealth",
+      "multiAttackOff.label": "Multi-Attack: Off",
+      "multiAttackOn.label": "Multi-Attack: On",
+      "weapons.label": "Weapons",
+      "equipment.label": "Equipment",
+      "abilities.label": "Abilities",
+      "spells.label": "Spells",
+      "recovery.label": "Recovery",
+      "removeTemporaryEffects.label": "Remove Temporary Effects",
+      "takeABreather.label": "Take a Breather",
+      "rest.label": "Rest",
+      "resources.label": "Resources",
+      "spendResolve.label": "Spend Resolve",
+      "utility.label": "Utility",
+      "hasInspirationTrue.label": "Has Inspiration? (True)",
+      "hasInspirationFalse.label": "Has Inspiration? (False)",
       "settings": {
-        "abbreviateSkills": {
-          "hint": "Display skill and ability names as a three-character abbreviation",
-          "name": "Abbreviate Skill and Ability Names"
-        },
-        "displaySpellInfo": {
-          "hint": "Display spell component information, concentration, and ritual status next to the spell's name",
-          "name": "Display Spell Information"
-        },
-        "showItemsWithoutActivationCosts": {
-          "hint": "Show items without an activation cost",
-          "name": "Show Items without Activation Costs"
-        },
-        "showPassiveFeats": {
-          "hint": "Show passive features",
-          "name": "Show Passive Features"
-        },
-        "showSlowActions": {
-          "hint": "Show actions that take longer than one round",
-          "name": "Show Slow Actions"
-        },
-        "showUnchargedItems": {
-          "hint": "Show items with no charges remaining",
-          "name": "Show Uncharged Items"
-        },
-        "showUnequippedItems": {
-          "hint": "Show unequipped items",
-          "name": "Show Unequipped Items"
-        },
-        "showUnpreparedSpells": {
-          "hint": "Show unprepared spells",
-          "name": "Show Unprepared Spells"
+        "showUnEquippedEquipment": {
+          "label": "Show Un-equipped Equipment",
+          "hint": "If true, actions will be shown for items that can, be equipped but are not currently equipped."
         }
       }
     }

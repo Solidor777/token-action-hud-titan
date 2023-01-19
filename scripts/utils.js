@@ -41,3 +41,8 @@ export async function importClass(path) {
         return module.default
     })
 }
+
+
+export function localize(label) {
+    return game.i18n.localize(`tokenActionHud.titan.${label}.label`);
+};

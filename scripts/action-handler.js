@@ -13,7 +13,8 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {array} subcategoryIds
      * @returns {object}
      */
-    async buildSystemActions (actionList, character, subcategoryIds) {
+    async buildSystemActions(actionList, character, subcategoryIds) {
+        console.log(actionList);
         const actor = character?.actor
 
         if (actor?.type === 'character' || actor?.type === 'npc') {
@@ -37,7 +38,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {array} subcategoryIds
      * @returns {object}
      */
-    async _buildCharacterActions (actionList, character, subcategoryIds) {
+    async _buildCharacterActions(actionList, character, subcategoryIds) {
         const inventorySubcategoryIds = subcategoryIds.filter((subcategoryId) =>
             subcategoryId === 'equipped' ||
             subcategoryId === 'consumables' ||
@@ -110,7 +111,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {array} subcategoryIds
      * @returns {object}
      */
-    async _buildVehicleActions (actionList, character, subcategoryIds) {
+    async _buildVehicleActions(actionList, character, subcategoryIds) {
         const inventorySubcategoryIds = subcategoryIds.filter((subcategoryId) =>
             subcategoryId === 'consumables' ||
             subcategoryId === 'equipment' ||
@@ -156,7 +157,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {array} subcategoryIds
      * @returns {object}
      */
-    async _buildMultipleTokenActions (actionList, subcategoryIds) {
+    async _buildMultipleTokenActions(actionList, subcategoryIds) {
         const character = { actor: { id: 'multi' }, token: { id: 'multi' } }
 
         if (subcategoryIds.some((subcategoryId) => subcategoryId === 'abilities')) {
@@ -210,7 +211,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {string} actionType
      * @param {string} subcategoryId
      */
-    _buildAbilities (actionList, character, actionType, subcategoryId) {
+    _buildAbilities(actionList, character, actionType, subcategoryId) {
         const actor = character?.actor
         const actorId = character?.actor?.id
         const tokenId = character.token?.id
@@ -254,7 +255,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {object} character The actor and/or token
      * @param {array} actionSubcategoryIds The action subcategory IDs
      */
-    _buildActions (actionList, character, actionSubcategoryIds) {
+    _buildActions(actionList, character, actionSubcategoryIds) {
         const actor = character?.actor
         if (!actor) return
 
@@ -268,27 +269,27 @@ export default class ActionHandler extends CoreActionHandler {
         actionSubcategoryIds.forEach(actionSubcategoryId => {
             let activationType = null
             switch (actionSubcategoryId) {
-            case 'actions':
-                activationType = 'action'
-                break
-            case 'bonus-actions':
-                activationType = 'bonus'
-                break
-            case 'crew-actions':
-                activationType = 'crew'
-                break
-            case 'lair-actions':
-                activationType = 'lair'
-                break
-            case 'legendary-actions':
-                activationType = 'legendary'
-                break
-            case 'reactions':
-                activationType = 'reaction'
-                break
-            case 'other-actions':
-                activationType = ''
-                break
+                case 'actions':
+                    activationType = 'action'
+                    break
+                case 'bonus-actions':
+                    activationType = 'bonus'
+                    break
+                case 'crew-actions':
+                    activationType = 'crew'
+                    break
+                case 'lair-actions':
+                    activationType = 'lair'
+                    break
+                case 'legendary-actions':
+                    activationType = 'legendary'
+                    break
+                case 'reactions':
+                    activationType = 'reaction'
+                    break
+                case 'other-actions':
+                    activationType = ''
+                    break
             }
 
             const itemsByActivationType = items.filter(item => item.system?.activation?.type === activationType)
@@ -303,7 +304,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {object} actionList
      * @param {object} character
      */
-    _buildCombat (actionList, character) {
+    _buildCombat(actionList, character) {
         const actorId = character?.actor?.id
         const tokenId = character?.token?.id
         const actionType = 'utility'
@@ -359,7 +360,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {object} actionList
      * @param {object} character
      */
-    _buildConditions (actionList, character) {
+    _buildConditions(actionList, character) {
         const actor = character?.actor
         const actorId = character?.actor?.id
         const tokenId = character?.token?.id
@@ -406,7 +407,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {object} actionList
      * @param {object} character
      */
-    _buildEffects (actionList, character) {
+    _buildEffects(actionList, character) {
         const actor = character?.actor
         const actorId = character?.actor?.id
         const tokenId = character?.token?.id
@@ -465,7 +466,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {object} actionList
      * @param {object} character
      */
-    _buildFeatures (actionList, character) {
+    _buildFeatures(actionList, character) {
         const actor = character?.actor
         const actionType = 'feature'
         const parentSubcategoryId = 'features'
@@ -574,7 +575,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {object} character
      * @param {array} inventorySubcategoryIds
      */
-    _buildInventory (actionList, character, inventorySubcategoryIds) {
+    _buildInventory(actionList, character, inventorySubcategoryIds) {
         const actor = character?.actor
 
         const validItems = this._discardSlowItems(
@@ -663,7 +664,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {object} items
      * @param {string} subcategoryId
      */
-    _buildItems (actionList, character, items, subcategoryId) {
+    _buildItems(actionList, character, items, subcategoryId) {
         if (items.length === 0) return
 
         const actionType = 'item'
@@ -680,7 +681,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {object} equipment
      * @returns {object}
      */
-    _getActiveEquipment (equipment) {
+    _getActiveEquipment(equipment) {
         let activeEquipment = []
         if (!getSetting('showItemsWithoutActivationCosts')) {
             const activationTypes = Object.keys(game.dnd5e.config.abilityActivationTypes)
@@ -707,7 +708,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {object} entity
      * @returns {object}
      */
-    _getAction (actionType, character, entity) {
+    _getAction(actionType, character, entity) {
         const actor = character?.actor
         const actorId = character?.actor?.id
         const tokenId = character?.token?.id
@@ -749,7 +750,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {object} item
      * @returns {object}
      */
-    _getItemInfo (actor, item) {
+    _getItemInfo(actor, item) {
         return {
             info1: this._getQuantityData(item) ?? '',
             info2: this._getUsesData(item) ?? '',
@@ -762,7 +763,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {object} actionList
      * @param {object} character
      */
-    _buildRests (actionList, character) {
+    _buildRests(actionList, character) {
         const actor = character?.actor
         const actorId = character?.actor?.id
         const tokenId = character?.token?.id
@@ -798,7 +799,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {object} actionList
      * @param {object} character
      */
-    _buildSkills (actionList, character) {
+    _buildSkills(actionList, character) {
         const actor = character?.actor
         const actorId = character?.actor?.id
         const tokenId = character?.token?.id
@@ -842,7 +843,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {object} actionList
      * @param {object} character
      */
-    _buildSpells (actionList, character) {
+    _buildSpells(actionList, character) {
         const actor = character?.actor
         const actionType = 'spell'
         const parentSubcategoryId = 'spells'
@@ -996,7 +997,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {object} spells
      * @returns {object}
      */
-    _sortSpellsByLevel (spells) {
+    _sortSpellsByLevel(spells) {
         const result = Object.values(spells)
         result.sort((a, b) => {
             if (a.system.level === b.system.level) {
@@ -1017,7 +1018,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {object} spell
      * @param {object} action
      */
-    _addSpellInfo (spell, action) {
+    _addSpellInfo(spell, action) {
         const components = spell.system.components
 
         action.info1 = ''
@@ -1051,7 +1052,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {object} actionList
      * @param {object} character
      */
-    _buildUtility (actionList, character) {
+    _buildUtility(actionList, character) {
         const actor = character?.actor
         const actorId = character?.actor?.id
         const tokenId = character?.token?.id
@@ -1098,7 +1099,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @private
      * @returns {object}
      */
-    _getActors () {
+    _getActors() {
         const allowedTypes = ['character', 'npc']
         const actors = canvas.tokens.controlled.map((token) => token.actor)
         if (actors.every((actor) => allowedTypes.includes(actor.type))) {
@@ -1112,7 +1113,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {object} item
      * @returns {string}
      */
-    _getQuantityData (item) {
+    _getQuantityData(item) {
         const quantity = item?.system?.quantity
         return (quantity > 1) ? quantity : ''
     }
@@ -1123,7 +1124,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {object} item
      * @returns {string}
      */
-    _getUsesData (item) {
+    _getUsesData(item) {
         let result = ''
 
         const uses = item?.system?.uses
@@ -1145,7 +1146,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {object} actor
      * @returns {string}
      */
-    _getConsumeData (item, actor) {
+    _getConsumeData(item, actor) {
         let result = ''
 
         const consumeType = item?.system?.consume?.type
@@ -1190,7 +1191,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {object} items
      * @returns {object}
      */
-    _discardSlowItems (items) {
+    _discardSlowItems(items) {
         let result
 
         if (!getSetting('showSlowActions')) {
@@ -1215,7 +1216,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {object} spells
      * @returns {object}
      */
-    _discardNonPreparedSpells (actor, spells) {
+    _discardNonPreparedSpells(actor, spells) {
         if (actor.type !== 'character' && getSetting('showUnequippedItems')) return
 
         const nonpreparableSpells = Object.keys(game.dnd5e.config.spellPreparationModes)
@@ -1243,7 +1244,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {object} items
      * @returns {object}
      */
-    _discardExpendedItems (items) {
+    _discardExpendedItems(items) {
         if (getSetting('showUnchargedItems')) return items
 
         return items.filter((item) => {
@@ -1263,7 +1264,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {string} level
      * @returns {string}
      */
-    _getProficiencyIcon (level) {
+    _getProficiencyIcon(level) {
         const icons = {
             0: '',
             0.5: '<i class="fas fa-adjust"></i>',
@@ -1278,7 +1279,7 @@ export default class ActionHandler extends CoreActionHandler {
      * @param {object} action
      * @returns {string}
      */
-    _getIcon (action) {
+    _getIcon(action) {
         const img = {
             bonus: '<i class="fas fa-plus"></i>',
             crew: '<i class="fas fa-users"></i>',
