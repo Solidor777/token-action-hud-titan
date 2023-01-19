@@ -41,10 +41,12 @@ export default class ActionHandler extends CoreActionHandler {
 
    _buildSingleCharacterActions(actionList, actorId, tokenId, actor, subcategoryIds) {
       this._buildAttributesSubcategory(actionList, actorId, tokenId);
-      this._buildSkillsSubcategory(actionList, actorId, tokenId);
       this._buildResistancesSubcategory(actionList, actorId, tokenId);
+      this._buildSkillsSubcategory(actionList, actorId, tokenId);
       this._buildWeaponsCategory(actionList, actorId, tokenId, actor);
       this._buildEquipmentSubcategory(actionList, actorId, tokenId, actor);
+      this._buildAbilitiesCategory(actionList, actorId, tokenId, actor);
+      this._buildSpellsCategory(actionList, actorId, tokenId, actor);
 
       return actionList;
    }
@@ -221,9 +223,8 @@ export default class ActionHandler extends CoreActionHandler {
          return 0;
       });
 
+      // Setup actions
       const actions = [];
-
-      // Add item checks
       items.forEach((item) => {
          const itemId = item._id;
          item.system.check.forEach((check, idx) => {
@@ -238,5 +239,97 @@ export default class ActionHandler extends CoreActionHandler {
 
       // Add actions to subcategory
       return this.addActionsToActionList(actionList, actions, 'equipment');
+   }
+
+   _buildAbilitiesCategory(actionList, actorId, tokenId, actor) {
+      // Filter and sort items
+      const items = actor.items.filter((item) => item.type === 'ability' && item.system.check.length > 0).sort((a, b) => {
+         if (a.sort < b.sort) {
+            return -1;
+         }
+         if (a.sort > b.sort) {
+            return 1;
+         }
+         return 0;
+      });
+
+      // Setup actions
+      const actions = [];
+      items.forEach((item) => {
+         const itemId = item._id;
+         item.system.check.forEach((check, idx) => {
+            actions.push({
+               id: `${itemId},itemCheck`,
+               name: `${item.name} (${check.label})`,
+               encodedValue: [actorId, tokenId, 'itemCheck', itemId, idx],
+               img: this.getImage(item)
+            });
+         });
+      });
+
+      // Add actions to subcategory
+      return this.addActionsToActionList(actionList, actions, 'abilities');
+   }
+
+   _buildSpellsCategory(actionList, actorId, tokenId, actor) {
+      // Filter and sort items
+      const items = actor.items.filter((item) => item.type === 'spell').sort((a, b) => {
+         if (a.sort < b.sort) {
+            return -1;
+         }
+         if (a.sort > b.sort) {
+            return 1;
+         }
+         return 0;
+      });
+
+      // Create list of traditions
+      const traditions = [];
+      items.forEach((spell) => {
+         if (traditions.indexOf(spell.system.tradition) === -1) {
+            traditions.push(spell.system.tradition);
+         }
+      });
+
+      // Create tradition subcategories
+      traditions.forEach((tradition) => {
+         this._buildTraditionSubcategory(actionList, actorId, tokenId, tradition, items);
+      });
+
+      return actionList;
+   }
+
+   _buildTraditionSubcategory(actionList, actorId, tokenId, tradition, spells) {
+      // Filter the spells by tradition
+      const traditionSpells = spells.filter((spell) => spell.system.tradition === tradition);
+
+      // Setup actions
+      const actions = [];
+      traditionSpells.forEach((item) => {
+         // Add casting check
+         const itemId = item._id;
+         actions.push({
+            id: `${itemId},castingCheck`,
+            name: `${item.name}`,
+            encodedValue: [actorId, tokenId, 'castingCheck', itemId],
+            img: this.getImage(item)
+         });
+
+         // Add item checks
+         item.system.check.forEach((check, idx) => {
+            actions.push({
+               id: `${itemId},itemCheck`,
+               name: `${item.name} (${check.label})`,
+               encodedValue: [actorId, tokenId, 'itemCheck', itemId, idx],
+               img: this.getImage(item)
+            });
+         });
+      });
+
+      // Add the subcategory and actions to the action list
+      const subcategory = this.initializeEmptySubcategory(tradition, 'spells', tradition, 'system');
+      this._addSubcategoryToCategory(actionList, subcategory, 'spells');
+
+      return this.addActionsToActionList(actionList, actions, tradition);
    }
 }

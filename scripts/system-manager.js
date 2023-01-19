@@ -51,20 +51,20 @@ export default class SystemManager extends CoreSystemManager {
                     }],
                 },
                 {
-                    id: 'skills',
-                    title: localize('skills'),
-                    subcategories: [{
-                        id: 'skills',
-                        title: localize('skills'),
-                        type: 'system'
-                    }],
-                },
-                {
                     id: 'resistances',
                     title: localize('resistances'),
                     subcategories: [{
                         id: 'resistances',
                         title: localize('resistances'),
+                        type: 'system'
+                    }],
+                },
+                {
+                    id: 'skills',
+                    title: localize('skills'),
+                    subcategories: [{
+                        id: 'skills',
+                        title: localize('skills'),
                         type: 'system'
                     }],
                 },

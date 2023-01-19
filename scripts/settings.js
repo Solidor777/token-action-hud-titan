@@ -1,7 +1,7 @@
 export function register(updateFunc) {
     const appName = 'token-action-hud-titan'
 
-    game.settings.register(appName, 'showUnEquippedItems', {
+    game.settings.register(appName, 'showUnEquippedEquipment', {
         name: game.i18n.localize(
             'tokenActionHud.titan.settings.showUnEquippedEquipment.label'
         ),
