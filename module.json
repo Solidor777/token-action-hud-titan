@@ -4,19 +4,13 @@
     "description": "Token Action HUD is a repositionable HUD of actions for a selected token",
     "authors": [
         {
-            "name": "Larkinabout",
-            "url": "https://github.com/Larkinabout"
-        },
-        {
-            "name": "Drental"
-        },
-        {
-            "name": "^ and stick"
+            "name": "Solidor",
+            "url": "https://github.com/Solidor777"
         }
     ],
-    "url": "https://github.com/Larkinabout/fvtt-token-action-hud-titan",
+    "url": "https://github.com/Solidor777/token-action-hud-titan",
     "flags": {},
-    "version": "0.1.2",
+    "version": "1.0.0",
     "compatibility": {
         "minimum": "10",
         "verified": "10.291"
@@ -56,9 +50,8 @@
         }
     },
     "socket": false,
-    "manifest": "https://github.com/Larkinabout/fvtt-token-action-hud-titan/releases/latest/download/module.json",
-    "download": "https://github.com/Larkinabout/fvtt-token-action-hud-titan/releases/download/0.1.2/module.zip",
-    "readme": "https://github.com/Larkinabout/fvtt-token-action-hud-titan#readme",
+    "manifest": "https://github.com/Solidor777/token-action-hud-titan/releases/download/latest/system.json",
+    "download": "https://github.com/Solidor777/token-action-hud-titan/releases/download/latest/token-action-hud-titan.zip",
     "protected": false,
     "coreTranslation": false,
     "library": false
