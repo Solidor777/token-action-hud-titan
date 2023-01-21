@@ -148,7 +148,7 @@ export default class ActionHandler extends CoreActionHandler {
       const items = actor.items.filter((item) => {
          return item.type === 'weapon'
             && (item.system.attack.length > 0 || item.system.check.length > 0)
-            && getSetting('showUnEquippedEquipment') || item.system.equipped;
+            && (getSetting('showUnEquippedEquipment') || item.system.equipped);
       })
          .sort((a, b) => {
             if (a.sort < b.sort) {
