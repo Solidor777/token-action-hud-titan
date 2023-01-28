@@ -38,8 +38,8 @@ export class SystemManager extends CoreSystemManager {
 
     /** @override */
     async doRegisterDefaultFlags() {
-        await CoreUtils.setUserFlag('default', DEFAULTS);
-        await CoreUtils.setUserFlag('categories', DEFAULTS.categories);
-        await CoreUtils.setUserFlag('subcategories', DEFAULTS.subcategories);
+        await CoreUtils.setUserFlag('default', foundry.utils.deepClone(DEFAULTS));
+        await CoreUtils.setUserFlag('categories', foundry.utils.deepClone(DEFAULTS.categories));
+        await CoreUtils.setUserFlag('subcategories', foundry.utils.deepClone(DEFAULTS.subcategories));
     }
 }

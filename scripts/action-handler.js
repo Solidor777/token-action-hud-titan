@@ -173,7 +173,7 @@ export default class ActionHandler extends CoreActionHandler {
             id: `${weaponId},attack,${idx}`,
             name: attack.label,
             encodedValue: [actorId, tokenId, 'attackCheck', weaponId, idx].join(this.delimiter),
-            icon: attack.type === 'melee' ? '<i class="fas fa-sword"></i>' : '<i class="fas fa-bow-arrow"></i>'
+            icon1: attack.type === 'melee' ? '<i class="fas fa-sword"></i>' : '<i class="fas fa-bow-arrow"></i>'
          };
       });
 
@@ -183,7 +183,7 @@ export default class ActionHandler extends CoreActionHandler {
             id: `${weaponId},itemCheck,${idx}`,
             name: check.label,
             encodedValue: [actorId, tokenId, 'itemCheck', weaponId, idx].join(this.delimiter),
-            icon: '<i class="fas fa-dice"></i>'
+            icon1: '<i class="fas fa-dice"></i>'
          };
       });
 
@@ -192,13 +192,20 @@ export default class ActionHandler extends CoreActionHandler {
          id: `${weaponId},toggleMultiAttack`,
          name: localize(weapon.system.multiAttack ? 'multiAttackOn' : 'multiAttackOff'),
          encodedValue: [actorId, tokenId, 'toggleMultiAttack', weaponId].join(this.delimiter),
-         icon: weapon.system.multiAttack ? '<i class="fas fa-swords"></i>' : '<i class="fas fa-sword"></i>'
+         icon1: weapon.system.multiAttack ? '<i class="fas fa-swords"></i>' : '<i class="fas fa-sword"></i>'
       }
 
-      // Add the subcategory and actions to the action list
-      const subcategory = { id: weaponId, nestId: weaponId, name: weapon.name, type: 'system' };
+      // Add the subcategory to the action list
+      const subcategory = { id: weaponId, nestId: weaponId, name: weapon.name, type: 'system', img: this.getImage(weapon) };
       const parentSubcategory = { id: 'weapons', type: 'system' };
       this.addSubcategoryToActionList(parentSubcategory, subcategory);
+
+      // Add the image if appropriate
+      const img = this.getImage(weapon);
+      if (img !== '') {
+         const categories = this.categoryManager.getFlattenedSubcategories({ id: weaponId, type: "system" });
+         categories.forEach((category) => category.img = img);
+      }
 
       return this.addActionsToActionList([...attacks, ...itemChecks, toggleMultiAttack], { id: weaponId, type: "system" });
    }
@@ -244,14 +251,14 @@ export default class ActionHandler extends CoreActionHandler {
             actions.push({
                id: `${itemId},itemCheck`,
                name: `${item.name} (${check.label})`,
-               encodedValue: [actorId, tokenId, 'itemCheck', itemId, idx],
+               encodedValue: [actorId, tokenId, 'itemCheck', itemId, idx].join(this.delimiter),
                img: this.getImage(item)
             });
          });
       });
 
       // Add actions to subcategory
-      return this.addActionsToActionList(actions, 'equipment');
+      return this.addActionsToActionList(actions, { id: 'equipment', type: "system" });
    }
 
    _buildAbilitiesCategory(actorId, tokenId, actor) {
@@ -353,19 +360,19 @@ export default class ActionHandler extends CoreActionHandler {
             id: `longRest`,
             name: localize('longRest'),
             encodedValue: [actorId, tokenId, 'longRest'],
-            icon: '<i class="fas fa-bed"></i>'
+            icon1: '<i class="fas fa-bed"></i>'
          },
          {
             id: `shortRest`,
             name: localize('shortRest'),
             encodedValue: [actorId, tokenId, 'shortRest'],
-            icon: '<i class="fas fa-face-exhaling"></i>'
+            icon1: '<i class="fas fa-face-exhaling"></i>'
          },
          {
             id: `removeTemporaryEffects`,
             name: localize('removeTemporaryEffects'),
             encodedValue: [actorId, tokenId, 'removeTemporaryEffects'],
-            icon: '<i class="fas fa-arrow-rotate-left"></i>'
+            icon1: '<i class="fas fa-arrow-rotate-left"></i>'
          }
       ];
 
@@ -380,7 +387,7 @@ export default class ActionHandler extends CoreActionHandler {
             id: `spendResolve`,
             name: localize('spendResolve'),
             encodedValue: [actorId, tokenId, 'spendResolve'],
-            icon: '<i class="fas fa-bolt"></i>'
+            icon1: '<i class="fas fa-bolt"></i>'
          }
       ];
 
@@ -390,7 +397,7 @@ export default class ActionHandler extends CoreActionHandler {
             id: `toggleInspiration`,
             name: localize('inspiration'),
             encodedValue: [actorId, tokenId, 'toggleInspiration'],
-            icon: actor.system.inspiration ? '<i class="fas fa-sun"></i>' : '<i class="far fa-circle"></i>'
+            icon1: actor.system.inspiration ? '<i class="fas fa-sun"></i>' : '<i class="far fa-circle"></i>'
          });
       }
 
