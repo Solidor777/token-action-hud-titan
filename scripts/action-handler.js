@@ -77,14 +77,12 @@ export default class ActionHandler extends CoreActionHandler {
          return {
             id: entry,
             name: localize(entry),
-            encodedValue: [actorId, tokenId, 'attributeCheck', entry]
+            encodedValue: [actorId, tokenId, 'attributeCheck', entry].join(this.delimiter)
          };
       });
 
       // Add entries to action list
-      console.log("Building attributes");
       this.addActionsToActionList(actions, { id: 'attributes', type: "system" });
-      console.log(this);
    }
 
    _buildSkillsSubcategory(actorId, tokenId) {
@@ -115,12 +113,12 @@ export default class ActionHandler extends CoreActionHandler {
          return {
             id: entry,
             name: localize(entry),
-            encodedValue: [actorId, tokenId, 'skillCheck', entry]
+            encodedValue: [actorId, tokenId, 'skillCheck', entry].join(this.delimiter)
          };
       });
 
       // Add entries to action list
-      return this.addActionsToActionList(actions, 'skills');
+      return this.addActionsToActionList(actions, { id: 'skills', type: "system" });
    }
 
    _buildResistancesSubcategory(actorId, tokenId) {
@@ -136,12 +134,12 @@ export default class ActionHandler extends CoreActionHandler {
          return {
             id: entry,
             name: localize(entry),
-            encodedValue: [actorId, tokenId, 'resistanceCheck', entry]
+            encodedValue: [actorId, tokenId, 'resistanceCheck', entry].join(this.delimiter)
          };
       });
 
       // Add entries to action list
-      return this.addActionsToActionList(actions, 'resistances');
+      return this.addActionsToActionList(actions, { id: 'resistances', type: "system" });
    }
 
    _buildWeaponsCategory(actorId, tokenId, actor) {
@@ -174,7 +172,7 @@ export default class ActionHandler extends CoreActionHandler {
          return {
             id: `${weaponId},attack,${idx}`,
             name: attack.label,
-            encodedValue: [actorId, tokenId, 'attackCheck', weaponId, idx],
+            encodedValue: [actorId, tokenId, 'attackCheck', weaponId, idx].join(this.delimiter),
             icon: attack.type === 'melee' ? '<i class="fas fa-sword"></i>' : '<i class="fas fa-bow-arrow"></i>'
          };
       });
@@ -184,7 +182,7 @@ export default class ActionHandler extends CoreActionHandler {
          return {
             id: `${weaponId},itemCheck,${idx}`,
             name: check.label,
-            encodedValue: [actorId, tokenId, 'itemCheck', weaponId, idx],
+            encodedValue: [actorId, tokenId, 'itemCheck', weaponId, idx].join(this.delimiter),
             icon: '<i class="fas fa-dice"></i>'
          };
       });
@@ -193,16 +191,16 @@ export default class ActionHandler extends CoreActionHandler {
       const toggleMultiAttack = {
          id: `${weaponId},toggleMultiAttack`,
          name: localize(weapon.system.multiAttack ? 'multiAttackOn' : 'multiAttackOff'),
-         encodedValue: [actorId, tokenId, 'toggleMultiAttack', weaponId],
+         encodedValue: [actorId, tokenId, 'toggleMultiAttack', weaponId].join(this.delimiter),
          icon: weapon.system.multiAttack ? '<i class="fas fa-swords"></i>' : '<i class="fas fa-sword"></i>'
       }
 
       // Add the subcategory and actions to the action list
-      const subcategory = this.initializeEmptySubcategory(weaponId, 'weapons', weapon.name, 'system');
-      subcategory.img = this.getImage(weapon);
-      this._addSubcategoryToCategory(subcategory, 'weapons');
+      const subcategory = { id: weaponId, nestId: weaponId, name: weapon.name, type: 'system' };
+      const parentSubcategory = { id: 'weapons', type: 'system' };
+      this.addSubcategoryToActionList(parentSubcategory, subcategory);
 
-      return this.addActionsToActionList([...attacks, ...itemChecks, toggleMultiAttack], weaponId);
+      return this.addActionsToActionList([...attacks, ...itemChecks, toggleMultiAttack], { id: weaponId, type: "system" });
    }
 
    _buildEquipmentSubcategory(actorId, tokenId, actor) {

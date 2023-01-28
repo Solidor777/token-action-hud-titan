@@ -1,321 +1,197 @@
 // Core Module Imports
 import { CoreRollHandler, CoreUtils } from './config.js'
+import { getOptions } from './utils.js';
 
 export class RollHandler extends CoreRollHandler {
-    /**
-     * Handle Action Event
-     * @override
-     * @param {object} event
-     * @param {string} encodedValue
-     */
-    async doHandleActionEvent(event, encodedValue) {
-        const payload = encodedValue.split('|')
+   /**
+    * Handle Action Event
+    * @override
+    * @param {object} event
+    * @param {string} encodedValue
+    */
+   async doHandleActionEvent(event, encodedValue) {
+      // Get the payload
+      const actionData = encodedValue.split("|");
+      if (actionData.length < 3) {
+         console.error('TOKEN ACTION HUD (TITAN) | Action Failed. Incomplete Action Data.');
+         return;
+      }
 
-        if (payload.length !== 4) {
-            super.throwInvalidValueErr()
-        }
+      // Initialize action variables
+      const actorId = actionData[0];
+      const tokenId = actionData[1];
+      const actionType = actionData[2];
+      actionData.splice(0, 3);
 
-        const actionType = payload[0]
-        const actorId = payload[1]
-        const tokenId = payload[2]
-        const actionId = payload[3]
-
-        if (tokenId === 'multi' && actionId !== 'toggleCombat') {
-            for (const token of canvas.tokens.controlled) {
-                const tokenActorId = token.actor?.id
-                const tokenTokenId = token.id
-                await this._handleMacros(
-                    event,
-                    actionType,
-                    tokenActorId,
-                    tokenTokenId,
-                    actionId
-                )
+      // Handle multiple tokens
+      if (tokenId === 'multi') {
+         for (const token of canvas.tokens.controlled) {
+            const character = CoreUtils.getActor(token.actor?.id, token.id)?.character;
+            if (character) {
+               await this._performAction(actionType, actionData, character);
             }
-        } else {
-            await this._handleMacros(event, actionType, actorId, tokenId, actionId)
-        }
-    }
+         }
 
-    /**
-     * Handle Macros
-     * @private
-     * @param {object} event
-     * @param {string} actionType
-     * @param {string} actorId
-     * @param {string} tokenId
-     * @param {string} actionId
-     */
-    async _handleMacros(event, actionType, actorId, tokenId, actionId) {
-        switch (actionType) {
-            case 'ability':
-                this._rollAbility(event, actorId, tokenId, actionId)
-                break
-            case 'abilityCheck':
-                this._rollAbilityTest(event, actorId, tokenId, actionId)
-                break
-            case 'abilitySave':
-                this._rollAbilitySave(event, actorId, tokenId, actionId)
-                break
-            case 'condition':
-                if (!tokenId) return
-                await this._toggleCondition(event, tokenId, actionId)
-                break
-            case 'effect':
-                await this._toggleEffect(event, actorId, tokenId, actionId)
-                break
-            case 'feature':
-            case 'item':
-            case 'spell':
-            case 'weapon':
-                if (this.isRenderItem()) this.doRenderItem(actorId, tokenId, actionId)
-                else this._useItem(event, actorId, tokenId, actionId)
-                break
-            case 'magicItem':
-                this._rollMagicItem(event, actorId, tokenId, actionId)
-                break
-            case 'skill':
-                this._rollSkill(event, actorId, tokenId, actionId)
-                break
-            case 'utility':
-                await this._performUtilityMacro(event, actorId, tokenId, actionId)
-                break
-            default:
-                break
-        }
-    }
+         return;
+      }
 
-    /**
-     * Roll Ability
-     * @private
-     * @param {object} event
-     * @param {string} actorId
-     * @param {string} tokenId
-     * @param {string} actionId
-     */
-    _rollAbility(event, actorId, tokenId, actionId) {
-        const actor = CoreUtils.getActor(actorId, tokenId)
-        actor.rollAbility(actionId, { event })
-    }
+      // Handle single token
+      else {
+         const character = CoreUtils.getActor(actorId, tokenId)?.character;
+         if (character) {
+            return await this._performAction(actionType, actionData, character)
+         }
+      }
 
-    /**
-     * Roll Ability Save
-     * @private
-     * @param {object} event
-     * @param {string} actorId
-     * @param {string} tokenId
-     * @param {string} actionId
-     */
-    _rollAbilitySave(event, actorId, tokenId, actionId) {
-        const actor = CoreUtils.getActor(actorId, tokenId)
-        actor.rollAbilitySave(actionId, { event })
-    }
+      return;
+   }
 
-    /**
-     * Roll Ability Test
-     * @private
-     * @param {object} event
-     * @param {string} actorId
-     * @param {string} tokenId
-     * @param {string} actionId
-     */
-    _rollAbilityTest(event, actorId, tokenId, actionId) {
-        const actor = CoreUtils.getActor(actorId, tokenId)
-        actor.rollAbilityTest(actionId, { event })
-    }
 
-    /**
-     * Roll Magic Item
-     * @private
-     * @param {object} event
-     * @param {string} actorId
-     * @param {string} tokenId
-     * @param {string} actionId
-     */
-    _rollMagicItem(event, actorId, tokenId, actionId) {
-        const actor = CoreUtils.getActor(actorId, tokenId)
-        const actionParts = actionId.split('>')
-
-        const itemId = actionParts[0]
-        const magicEffectId = actionParts[1]
-
-        const magicItemActor = MagicItems.actor(actor.id)
-
-        // magicitems module 3.0.0 does not support Item5e#use
-        magicItemActor.roll(itemId, magicEffectId)
-
-        Hooks.callAll('forceUpdateTokenActionHud')
-    }
-
-    /**
-     * Roll Skill
-     * @private
-     * @param {object} event
-     * @param {string} actorId
-     * @param {string} tokenId
-     * @param {string} actionId
-     */
-    _rollSkill(event, actorId, tokenId, actionId) {
-        const actor = CoreUtils.getActor(actorId, tokenId)
-        actor.rollSkill(actionId, { event })
-    }
-
-    /**
-     * Use Item
-     * @private
-     * @param {object} event
-     * @param {string} actorId
-     * @param {string} tokenId
-     * @param {string} actionId
-     * @returns {object}
-     */
-    _useItem(event, actorId, tokenId, actionId) {
-        const actor = CoreUtils.getActor(actorId, tokenId)
-        const item = CoreUtils.getItem(actor, actionId)
-
-        if (this._needsRecharge(item)) {
-            item.rollRecharge()
-            return
-        }
-
-        return item.use({ event })
-    }
-
-    /**
-     * Needs Recharge
-     * @private
-     * @param {object} item
-     * @returns {boolean}
-     */
-    _needsRecharge(item) {
-        return (
-            item.system.recharge &&
-            !item.system.recharge.charged &&
-            item.system.recharge.value
-        )
-    }
-
-    /**
-     * Perform Utility Macro
-     * @param {object} event
-     * @param {string} actorId
-     * @param {string} tokenId
-     * @param {string} actionId
-     */
-    async _performUtilityMacro(event, actorId, tokenId, actionId) {
-        const actor = CoreUtils.getActor(actorId, tokenId)
-        const token = CoreUtils.getToken(tokenId)
-
-        switch (actionId) {
-            case 'deathSave':
-                actor.rollDeathSave({ event })
-                break
-            case 'endTurn':
-                if (!token) break
-                if (game.combat?.current?.tokenId === tokenId) {
-                    await game.combat?.nextTurn()
-                }
-                break
-            case 'initiative':
-                await this._rollInitiative(actorId)
-                break
-            case 'inspiration': {
-                const update = !actor.system.attributes.inspiration
-                actor.update({ 'data.attributes.inspiration': update })
-                break
+   async _performAction(actionType, actionData, character) {
+      switch (actionType) {
+         // Attribute check
+         case 'attributeCheck': {
+            const attribute = actionData[0];
+            if (!attribute) {
+               console.error('TOKEN ACTION HUD (TITAN) | Attribute Check Failed. No provided Attribute.');
+               return;
             }
-            case 'longRest':
-                actor.longRest()
-                break
-            case 'shortRest':
-                actor.shortRest()
-                break
-            case 'toggleCombat':
-                if (canvas.tokens.controlled.length === 0) break
-                await canvas.tokens.controlled[0].toggleCombat()
-                break
-            case 'toggleVisibility':
-                if (!token) break
-                token.toggleVisibility()
-                break
-        }
 
-        // Update HUD
-        Hooks.callAll('forceUpdateTokenActionHud')
-    }
+            return await character.rollAttributeCheck({
+               attribute: attribute,
+               getOptions: getOptions()
+            });
+         }
 
-    /**
-     * Roll Initiative
-     * @private
-     * @param {string} actorId
-     * @param {string} tokenId
-     */
-    async _rollInitiative(actorId, tokenId) {
-        const actor = CoreUtils.getActor(actorId, tokenId)
+         // Resistance check
+         case 'resistanceCheck': {
+            const resistance = actionData[0];
+            if (!resistance) {
+               console.error('TOKEN ACTION HUD (TITAN) | Resistance Check Failed. No provided Resistance.');
+               return;
+            }
 
-        await actor.rollInitiative({ createCombatants: true })
+            return await character.rollResistanceCheck({
+               resistance: resistance,
+               getOptions: getOptions()
+            });
 
-        Hooks.callAll('forceUpdateTokenActionHud')
-    }
+            return;
+         }
 
-    /**
-     * Toggle Condition
-     * @private
-     * @param {object} event
-     * @param {string} tokenId
-     * @param {string} actionId
-     * @param {object} effect
-     */
-    async _toggleCondition(event, tokenId, actionId, effect = null) {
-        const token = CoreUtils.getToken(tokenId)
-        const isRightClick = this.isRightClick(event)
-        if (game.dfreds && effect?.flags?.isConvenient) {
-            const effectLabel = effect.label
-            game.dfreds.effectInterface._toggleEffect(effectLabel)
-        } else {
-            const condition = this.findCondition(actionId)
-            if (!condition) return
+         // Skill check
+         case 'skillCheck': {
+            const skill = actionData[0];
+            if (!skill) {
+               console.error('TOKEN ACTION HUD (TITAN) | Skill Check Failed. No provided Skill.');
+               return;
+            }
 
-            isRightClick
-                ? await token.toggleEffect(condition, { overlay: true })
-                : await token.toggleEffect(condition)
-        }
+            return await character.rollAttributeCheck({
+               skill: skill,
+               getOptions: getOptions()
+            });
 
-        Hooks.callAll('forceUpdateTokenActionHud')
-    }
+         }
 
-    /**
-     * Get Condition
-     * @private
-     * @param {string} actionId
-     * @returns {object}
-     */
-    findCondition(id) {
-        return CONFIG.statusEffects.find((effect) => effect.id === id)
-    }
+         // Attack check
+         case 'attackCheck': {
+            const itemId = actionData[0];
+            if (!itemId) {
+               console.error('TOKEN ACTION HUD (TITAN) | Attack Check Failed. No provided Weapon ID.');
+               console.trace();
+               return;
+            }
 
-    /**
-     * Toggle Effect
-     * @param {object} event
-     * @param {string} actorId
-     * @param {string} tokenId
-     * @param {string} actionId
-     */
-    async _toggleEffect(event, actorId, tokenId, actionId) {
-        const actor = CoreUtils.getActor(actorId, tokenId)
-        const effects = 'find' in actor.effects.entries ? actor.effects.entries : actor.effects
-        const effect = effects.find((e) => e.id === actionId)
+            const attackIdx = actionData[1];
+            if (!attackIdx) {
+               console.error('TOKEN ACTION HUD (TITAN) | Attack Check Failed. No provided Attack IDX.');
+               console.trace();
+               return;
+            }
 
-        if (!effect) return
+            return await character.rollAttackCheck({
+               itemId: itemId,
+               attackIdx: attackIdx,
+               getOptions: getOptions()
+            });
+         }
 
-        const isRightClick = this.isRightClick(event)
+         // Toggle multi attack 
+         case 'toggleMultiAttack': {
+            const itemId = actionData[0];
+            if (!itemId) {
+               console.error('TOKEN ACTION HUD (TITAN) | Toggle Multi-Attack Failed. No provided Weapon ID.');
+               console.trace();
+               return;
+            }
 
-        if (isRightClick) {
-            await effect.delete()
-        } else {
-            await effect.update({ disabled: !effect.disabled })
-        }
+            return await character.toggleMultiAttack(itemId);
+         }
 
-        Hooks.callAll('forceUpdateTokenActionHud')
-    }
+         // Item check
+         case 'itemCheck': {
+            const itemId = actionData[0];
+            if (!itemId) {
+               console.error('TOKEN ACTION HUD (TITAN) | Item Check Failed. No provided Item ID.');
+               console.trace();
+               return;
+            }
+
+            const checkIdx = actionData[1];
+            if (!checkIdx) {
+               console.error('TOKEN ACTION HUD (TITAN) | Item Check Failed. No provided Check IDX.');
+               console.trace();
+               return;
+            }
+
+            return await character.rollItemCheck({
+               itemId: itemId,
+               checkIdx: checkIdx,
+               getOptions: getOptions()
+            });
+         }
+
+         // Item check
+         case 'castingCheck': {
+            const itemId = actionData[0];
+            if (!itemId) {
+               console.error('TOKEN ACTION HUD (TITAN) | Casting Check Failed. No provided Item ID.');
+               console.trace();
+               return;
+            }
+
+            return await character.rollCastingCheck({
+               itemId: itemId,
+               getOptions: getOptions()
+            });
+         }
+
+         case 'longRest': {
+            return await character.longRest(true);
+         }
+
+         case 'shortRest': {
+            return await character.shortRest(true);
+         }
+
+         case 'removeTemporaryEffects': {
+            return await character.removeTemporaryEffects(true);
+         }
+
+         case 'spendResolve': {
+            return await character.spendResolve(true);
+         }
+
+         case 'toggleInspiration': {
+            return await character.toggleInspiration();
+         }
+
+         default: {
+            console.error(`TOKEN ACTION HUD (TITAN) | Action. Invalid action type (${actionType}).`);
+            console.trace();
+            return;
+         }
+      }
+   }
 }

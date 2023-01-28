@@ -2,7 +2,7 @@
 import ActionHandler from './action-handler.js'
 import { RollHandler as Core } from './roll-handler.js'
 import * as systemSettings from './settings.js'
-import getDefaults from './defaults.js'
+import { DEFAULTS } from './defaults.js'
 
 // Core Module Imports
 import { CoreSystemManager, CoreCategoryManager, CoreUtils } from './config.js'
@@ -38,6 +38,8 @@ export class SystemManager extends CoreSystemManager {
 
     /** @override */
     async doRegisterDefaultFlags() {
-        await CoreUtils.setUserFlag('default', getDefaults());
+        await CoreUtils.setUserFlag('default', DEFAULTS);
+        await CoreUtils.setUserFlag('categories', DEFAULTS.categories);
+        await CoreUtils.setUserFlag('subcategories', DEFAULTS.subcategories);
     }
 }
