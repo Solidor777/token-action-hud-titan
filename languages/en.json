@@ -43,6 +43,7 @@
       "spendResolve.label": "Spend Resolve",
       "utility.label": "Utility",
       "inspiration.label": "Inspiration",
+      "traditions.label": "Traditions",
       "settings": {
         "showUnEquippedEquipment": {
           "label": "Show Un-equipped Equipment",

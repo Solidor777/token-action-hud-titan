@@ -196,7 +196,7 @@ export default class ActionHandler extends CoreActionHandler {
       }
 
       // Add the subcategory to the action list
-      const subcategory = { id: weaponId, nestId: weaponId, name: weapon.name, type: 'system', img: this.getImage(weapon) };
+      const subcategory = { id: weaponId, nestId: weaponId, name: weapon.name, type: 'system' };
       const parentSubcategory = { id: 'weapons', type: 'system' };
       this.addSubcategoryToActionList(parentSubcategory, subcategory);
 
@@ -281,14 +281,14 @@ export default class ActionHandler extends CoreActionHandler {
             actions.push({
                id: `${itemId},itemCheck`,
                name: `${item.name} (${check.label})`,
-               encodedValue: [actorId, tokenId, 'itemCheck', itemId, idx],
+               encodedValue: [actorId, tokenId, 'itemCheck', itemId, idx].join(this.delimiter),
                img: this.getImage(item)
             });
          });
       });
 
       // Add actions to subcategory
-      return this.addActionsToActionList(actions, 'abilities');
+      return this.addActionsToActionList(actions, { id: 'abilities', type: 'system' });
    }
 
    _buildSpellsCategory(actorId, tokenId, actor) {
@@ -331,7 +331,7 @@ export default class ActionHandler extends CoreActionHandler {
          actions.push({
             id: `${itemId},castingCheck`,
             name: `${item.name}`,
-            encodedValue: [actorId, tokenId, 'castingCheck', itemId],
+            encodedValue: [actorId, tokenId, 'castingCheck', itemId].join(this.delimiter),
             img: this.getImage(item)
          });
 
@@ -340,17 +340,18 @@ export default class ActionHandler extends CoreActionHandler {
             actions.push({
                id: `${itemId},itemCheck`,
                name: `${item.name} (${check.label})`,
-               encodedValue: [actorId, tokenId, 'itemCheck', itemId, idx],
+               encodedValue: [actorId, tokenId, 'itemCheck', itemId, idx].join(this.delimiter),
                img: this.getImage(item)
             });
          });
       });
 
-      // Add the subcategory and actions to the action list
-      const subcategory = this.initializeEmptySubcategory(tradition, 'spells', tradition, 'system');
-      this._addSubcategoryToCategory(subcategory, 'spells');
+      // Add the subcategory to the action list
+      const subcategory = { id: tradition, nestId: tradition, name: tradition, type: 'system' };
+      const parentSubcategory = { id: 'traditions', type: 'system' };
+      this.addSubcategoryToActionList(parentSubcategory, subcategory);
 
-      return this.addActionsToActionList(actions, tradition);
+      return this.addActionsToActionList(actions, { id: tradition, type: 'system' });
    }
 
    _buildRecoverySubcategory(actorId, tokenId) {
@@ -359,25 +360,25 @@ export default class ActionHandler extends CoreActionHandler {
          {
             id: `longRest`,
             name: localize('longRest'),
-            encodedValue: [actorId, tokenId, 'longRest'],
+            encodedValue: [actorId, tokenId, 'longRest'].join(this.delimiter),
             icon1: '<i class="fas fa-bed"></i>'
          },
          {
             id: `shortRest`,
             name: localize('shortRest'),
-            encodedValue: [actorId, tokenId, 'shortRest'],
+            encodedValue: [actorId, tokenId, 'shortRest'].join(this.delimiter),
             icon1: '<i class="fas fa-face-exhaling"></i>'
          },
          {
             id: `removeTemporaryEffects`,
             name: localize('removeTemporaryEffects'),
-            encodedValue: [actorId, tokenId, 'removeTemporaryEffects'],
+            encodedValue: [actorId, tokenId, 'removeTemporaryEffects'].join(this.delimiter),
             icon1: '<i class="fas fa-arrow-rotate-left"></i>'
          }
       ];
 
       // Add actions to list
-      return this.addActionsToActionList(actions, 'recovery');
+      return this.addActionsToActionList(actions, { id: 'recovery', type: 'system' });
    }
 
    _buildResourcesSubcategory(actorId, tokenId, actor) {
@@ -386,7 +387,7 @@ export default class ActionHandler extends CoreActionHandler {
          {
             id: `spendResolve`,
             name: localize('spendResolve'),
-            encodedValue: [actorId, tokenId, 'spendResolve'],
+            encodedValue: [actorId, tokenId, 'spendResolve'].join(this.delimiter),
             icon1: '<i class="fas fa-bolt"></i>'
          }
       ];
@@ -396,12 +397,12 @@ export default class ActionHandler extends CoreActionHandler {
          actions.push({
             id: `toggleInspiration`,
             name: localize('inspiration'),
-            encodedValue: [actorId, tokenId, 'toggleInspiration'],
+            encodedValue: [actorId, tokenId, 'toggleInspiration'].join(this.delimiter),
             icon1: actor.system.inspiration ? '<i class="fas fa-sun"></i>' : '<i class="far fa-circle"></i>'
          });
       }
 
       // Add actions to list
-      return this.addActionsToActionList(actions, 'resources');
+      return this.addActionsToActionList(actions, { id: 'resources', type: 'system' });
    }
 }

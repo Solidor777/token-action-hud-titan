@@ -81,7 +81,13 @@ export const DEFAULTS = {
             nestId: 'spells',
             id: 'spells',
             name: localize('spells'),
-            subcategories: [],
+            subcategories: [{
+                nestId: 'spells_traditions',
+                id: 'traditions',
+                name: localize('traditions'),
+                type: 'system',
+                hasDerivedSubcategories: false
+            }],
         },
         {
             nestId: 'utility',
