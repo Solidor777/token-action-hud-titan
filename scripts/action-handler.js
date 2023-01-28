@@ -1,8 +1,8 @@
 // System Module Imports
-import { getSetting, localize } from './utils.js'
+import { getSetting, localize } from './utils.js';
 
 // Core Module Imports
-import { CoreActionHandler, Logger } from './config.js'
+import { CoreActionHandler } from './config.js'
 
 export default class ActionHandler extends CoreActionHandler {
 

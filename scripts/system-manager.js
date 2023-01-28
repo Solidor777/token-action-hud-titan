@@ -9,15 +9,14 @@ import { CoreSystemManager, CoreCategoryManager } from './config.js'
 
 export default class SystemManager extends CoreSystemManager {
     /** @override */
-    doGetCategoryManager(user) {
-        const categoryManager = new CoreCategoryManager(user)
-        return categoryManager;
+    doGetCategoryManager() {
+        return new CoreCategoryManager()
     }
 
     /** @override */
-    doGetActionHandler(character, categoryManager) {
-        const actionHandler = new ActionHandler(character, categoryManager)
-        return actionHandler;
+    doGetActionHandler(categoryManager) {
+        const actionHandler = new ActionHandler(categoryManager)
+        return actionHandler
     }
 
     /** @override */

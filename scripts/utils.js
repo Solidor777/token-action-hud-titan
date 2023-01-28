@@ -1,5 +1,3 @@
-import { Logger } from './config.js'
-
 const namespace = 'token-action-hud-titan'
 
 /**
@@ -13,7 +11,7 @@ export function getSetting(key, defaultValue = null) {
     if (game.settings.settings.get(`${namespace}.${key}`)) {
         value = game.settings.get(namespace, key)
     } else {
-        Logger.debug(`Setting '${key}' not found`)
+        //Logger.debug(`Setting '${key}' not found`)
     }
     return value
 }
@@ -26,9 +24,9 @@ export function getSetting(key, defaultValue = null) {
 export async function setSetting(key, value) {
     if (game.settings.settings.get(`${namespace}.${key}`)) {
         value = await game.settings.set(namespace, key, value)
-        Logger.debug(`Setting '${key}' set to '${value}'`)
+        //Logger.debug(`Setting '${key}' set to '${value}'`)
     } else {
-        Logger.debug(`Setting '${key}' not found`)
+        //Logger.debug(`Setting '${key}' not found`)
     }
 }
 

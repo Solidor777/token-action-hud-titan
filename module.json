@@ -1,58 +1,65 @@
 {
-    "id": "token-action-hud-titan",
-    "title": "Token Action HUD Titan",
-    "description": "Token Action HUD is a repositionable HUD of actions for a selected token",
-    "authors": [
-        {
-            "name": "Solidor",
-            "url": "https://github.com/Solidor777"
-        }
-    ],
-    "url": "https://github.com/Solidor777/token-action-hud-titan",
-    "flags": {},
-    "version": "1.0.0",
-    "compatibility": {
-        "minimum": "10",
-        "verified": "10.291"
-    },
-    "scripts": [],
-    "styles": [],
-    "languages": [
-        {
-            "lang": "en",
-            "name": "English",
-            "path": "languages/en.json"
-        }
-    ],
-    "packs": [],
-    "relationships": {
-        "systems": [
-            {
-                "id": "titan",
-                "type": "system"
+   "id": "token-action-hud-titan",
+   "title": "Token Action HUD Titan",
+   "description": "Token Action HUD is a repositionable HUD of actions for a selected token",
+   "authors": [
+      {
+         "name": "Solidor",
+         "url": "https://github.com/Solidor777",
+         "flags": {}
+      }
+   ],
+   "url": "https://github.com/Solidor777/token-action-hud-titan",
+   "flags": {},
+   "version": "1.0.0",
+   "compatibility": {
+      "minimum": "10",
+      "verified": "10.291"
+   },
+   "scripts": [],
+   "styles": [],
+   "languages": [
+      {
+         "lang": "en",
+         "name": "English",
+         "path": "languages/en.json",
+         "flags": {}
+      }
+   ],
+   "packs": [],
+   "relationships": {
+      "systems": [
+         {
+            "id": "titan",
+            "type": "system",
+            "compatibility": {
+               "minimum": "1.0.0",
+               "verified": "1.0.0"
             }
-        ],
-        "requires": [
-            {
-                "id": "token-action-hud-core",
-                "compatibility": [
-                    {
-                        "minimum": "0.1.1",
-                        "maximum": "0.1.1",
-                        "verified": "0.1.1"
-                    }
-                ]
-            }
-        ],
-        "optional": [],
-        "flags": {
-            "optional": []
-        }
-    },
-    "socket": false,
-    "manifest": "https://github.com/Solidor777/token-action-hud-titan/releases/download/latest/module.json",
-    "download": "https://github.com/Solidor777/token-action-hud-titan/releases/download/latest/token-action-hud-titan.zip",
-    "protected": false,
-    "coreTranslation": false,
-    "library": false
+         }
+      ],
+      "requires": [
+         {
+            "id": "token-action-hud-core",
+            "type": "module",
+            "compatibility": [
+               {
+                  "minimum": "1.0.1",
+                  "maximum": "1.0",
+                  "verified": "1.0.1"
+               }
+            ]
+         }
+      ],
+      "optional": [],
+      "flags": {
+         "optional": []
+      }
+   },
+   "socket": false,
+   "manifest": "https://github.com/Solidor777/token-action-hud-titan/releases/download/latest/module.json",
+   "download": "https://github.com/Solidor777/token-action-hud-titan/releases/download/latest/token-action-hud-titan.zip",
+   "protected": false,
+   "coreTranslation": false,
+   "library": false
 }
