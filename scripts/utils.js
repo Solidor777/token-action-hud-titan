@@ -1,3 +1,5 @@
+import { Logger } from './config.js'
+
 const namespace = 'token-action-hud-titan'
 
 /**
@@ -8,10 +10,10 @@ const namespace = 'token-action-hud-titan'
  */
 export function getSetting(key, defaultValue = null) {
     let value = defaultValue ?? null
-    if (game.settings.settings.get(`${namespace}.${key}`)) {
+    try {
         value = game.settings.get(namespace, key)
-    } else {
-        //Logger.debug(`Setting '${key}' not found`)
+    } catch {
+        Logger.debug(`Setting '${key}' not found`)
     }
     return value
 }
@@ -24,20 +26,10 @@ export function getSetting(key, defaultValue = null) {
 export async function setSetting(key, value) {
     if (game.settings.settings.get(`${namespace}.${key}`)) {
         value = await game.settings.set(namespace, key, value)
-        //Logger.debug(`Setting '${key}' set to '${value}'`)
+        Logger.debug(`Setting '${key}' set to '${value}'`)
     } else {
-        //Logger.debug(`Setting '${key}' not found`)
+        Logger.debug(`Setting '${key}' not found`)
     }
-}
-
-/**
- * Import a default class
- * @param {string} path The path of the file
- */
-export async function importClass(path) {
-    return await import(path).then(module => {
-        return module.default
-    })
 }
 
 

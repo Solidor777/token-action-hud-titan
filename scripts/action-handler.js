@@ -1,14 +1,14 @@
 // System Module Imports
-import { getSetting, localize } from './utils.js';
+import { getSetting, localize } from './utils.js'
 
 // Core Module Imports
-import { CoreActionHandler } from './config.js'
+import { CoreActionHandler, Logger } from './config.js'
 
 export default class ActionHandler extends CoreActionHandler {
 
-   _addSubcategoryToCategory(actionList, subcategory, categoryId) {
+   _addSubcategoryToCategory(subcategory, categoryId) {
       // Add subcategory to each category with a matching id
-      actionList.categories.forEach((category) => {
+      this.actionList.categories.forEach((category) => {
          if (category.id === categoryId) {
             category.subcategories = [...category.subcategories, subcategory];
          }
@@ -20,52 +20,51 @@ export default class ActionHandler extends CoreActionHandler {
    /**
     * Build System Actions
     * @override
-    * @param {object} actionList
     * @param {object} character
     * @param {array} subcategoryIds
     * @returns {object}
     */
-   async buildSystemActions(actionList, character, subcategoryIds) {
+   async buildSystemActions(character, subcategoryIds) {
       const actor = character?.actor
 
       // Single actor actions
       if (actor) {
          const actorId = character?.actor?.id
          const tokenId = character?.token?.id
-         return this._buildSingleCharacterActions(actionList, actorId, tokenId, actor, subcategoryIds);
+         return this._buildSingleCharacterActions(actorId, tokenId, actor, subcategoryIds);
       }
 
       // Multi character actions
-      return this._buildMultiCharacterActions(actionList);
+      return this._buildMultiCharacterActions();
    }
 
-   _buildSingleCharacterActions(actionList, actorId, tokenId, actor) {
-      this._buildAttributesSubcategory(actionList, actorId, tokenId);
-      this._buildResistancesSubcategory(actionList, actorId, tokenId);
-      this._buildSkillsSubcategory(actionList, actorId, tokenId);
-      this._buildWeaponsCategory(actionList, actorId, tokenId, actor);
-      this._buildEquipmentSubcategory(actionList, actorId, tokenId, actor);
-      this._buildAbilitiesCategory(actionList, actorId, tokenId, actor);
-      this._buildSpellsCategory(actionList, actorId, tokenId, actor);
-      this._buildRecoverySubcategory(actionList, actorId, tokenId);
-      this._buildResourcesSubcategory(actionList, actorId, tokenId, actor);
+   _buildSingleCharacterActions(actorId, tokenId, actor) {
+      this._buildAttributesSubcategory(actorId, tokenId);
+      this._buildResistancesSubcategory(actorId, tokenId);
+      this._buildSkillsSubcategory(actorId, tokenId);
+      this._buildWeaponsCategory(actorId, tokenId, actor);
+      this._buildEquipmentSubcategory(actorId, tokenId, actor);
+      this._buildAbilitiesCategory(actorId, tokenId, actor);
+      this._buildSpellsCategory(actorId, tokenId, actor);
+      this._buildRecoverySubcategory(actorId, tokenId);
+      this._buildResourcesSubcategory(actorId, tokenId, actor);
 
-      return actionList;
+      return;
    }
 
-   _buildMultiCharacterActions(actionList) {
+   _buildMultiCharacterActions() {
       const actorId = 'multi';
       const tokenId = 'multi';
-      this._buildAttributesSubcategory(actionList, actorId, tokenId);
-      this._buildResistancesSubcategory(actionList, actorId, tokenId);
-      this._buildSkillsSubcategory(actionList, actorId, tokenId);
-      this._buildRecoverySubcategory(actionList, actorId, tokenId);
-      this._buildResourcesSubcategory(actionList, actorId, tokenId);
+      this._buildAttributesSubcategory(actorId, tokenId);
+      this._buildResistancesSubcategory(actorId, tokenId);
+      this._buildSkillsSubcategory(actorId, tokenId);
+      this._buildRecoverySubcategory(actorId, tokenId);
+      this._buildResourcesSubcategory(actorId, tokenId);
 
-      return actionList;
+      return;
    }
 
-   _buildAttributesSubcategory(actionList, actorId, tokenId) {
+   _buildAttributesSubcategory(actorId, tokenId) {
       // List entries
       const entries = [
          'body',
@@ -83,10 +82,12 @@ export default class ActionHandler extends CoreActionHandler {
       });
 
       // Add entries to action list
-      return this.addActionsToActionList(actionList, actions, 'attributes');
+      console.log("Building attributes");
+      this.addActionsToActionList(actions, { id: 'attributes', type: "system" });
+      console.log(this);
    }
 
-   _buildSkillsSubcategory(actionList, actorId, tokenId) {
+   _buildSkillsSubcategory(actorId, tokenId) {
       // List entries
       const entries = [
          'arcana',
@@ -119,10 +120,10 @@ export default class ActionHandler extends CoreActionHandler {
       });
 
       // Add entries to action list
-      return this.addActionsToActionList(actionList, actions, 'skills');
+      return this.addActionsToActionList(actions, 'skills');
    }
 
-   _buildResistancesSubcategory(actionList, actorId, tokenId) {
+   _buildResistancesSubcategory(actorId, tokenId) {
       // List entries
       const entries = [
          'reflexes',
@@ -140,10 +141,10 @@ export default class ActionHandler extends CoreActionHandler {
       });
 
       // Add entries to action list
-      return this.addActionsToActionList(actionList, actions, 'resistances');
+      return this.addActionsToActionList(actions, 'resistances');
    }
 
-   _buildWeaponsCategory(actionList, actorId, tokenId, actor) {
+   _buildWeaponsCategory(actorId, tokenId, actor) {
       // Filter and sort items
       const items = actor.items.filter((item) => {
          return item.type === 'weapon'
@@ -161,10 +162,10 @@ export default class ActionHandler extends CoreActionHandler {
          });
 
       // Build the subcategory
-      items.forEach((weapon) => this._buildWeaponSubcategory(actionList, actorId, tokenId, weapon));
+      items.forEach((weapon) => this._buildWeaponSubcategory(actorId, tokenId, weapon));
    }
 
-   _buildWeaponSubcategory(actionList, actorId, tokenId, weapon) {
+   _buildWeaponSubcategory(actorId, tokenId, weapon) {
       // Get the weapon ID
       const weaponId = weapon._id;
 
@@ -199,12 +200,12 @@ export default class ActionHandler extends CoreActionHandler {
       // Add the subcategory and actions to the action list
       const subcategory = this.initializeEmptySubcategory(weaponId, 'weapons', weapon.name, 'system');
       subcategory.img = this.getImage(weapon);
-      this._addSubcategoryToCategory(actionList, subcategory, 'weapons');
+      this._addSubcategoryToCategory(subcategory, 'weapons');
 
-      return this.addActionsToActionList(actionList, [...attacks, ...itemChecks, toggleMultiAttack], weaponId);
+      return this.addActionsToActionList([...attacks, ...itemChecks, toggleMultiAttack], weaponId);
    }
 
-   _buildEquipmentSubcategory(actionList, actorId, tokenId, actor) {
+   _buildEquipmentSubcategory(actorId, tokenId, actor) {
       // Filter and sort items
       const items = actor.items.filter((item) => {
          if (item.system.check.length > 0) {
@@ -252,10 +253,10 @@ export default class ActionHandler extends CoreActionHandler {
       });
 
       // Add actions to subcategory
-      return this.addActionsToActionList(actionList, actions, 'equipment');
+      return this.addActionsToActionList(actions, 'equipment');
    }
 
-   _buildAbilitiesCategory(actionList, actorId, tokenId, actor) {
+   _buildAbilitiesCategory(actorId, tokenId, actor) {
       // Filter and sort items
       const items = actor.items.filter((item) => item.type === 'ability' && item.system.check.length > 0).sort((a, b) => {
          if (a.sort < b.sort) {
@@ -282,10 +283,10 @@ export default class ActionHandler extends CoreActionHandler {
       });
 
       // Add actions to subcategory
-      return this.addActionsToActionList(actionList, actions, 'abilities');
+      return this.addActionsToActionList(actions, 'abilities');
    }
 
-   _buildSpellsCategory(actionList, actorId, tokenId, actor) {
+   _buildSpellsCategory(actorId, tokenId, actor) {
       // Filter and sort items
       const items = actor.items.filter((item) => item.type === 'spell').sort((a, b) => {
          if (a.sort < b.sort) {
@@ -307,13 +308,13 @@ export default class ActionHandler extends CoreActionHandler {
 
       // Create tradition subcategories
       traditions.forEach((tradition) => {
-         this._buildTraditionSubcategory(actionList, actorId, tokenId, tradition, items);
+         this._buildTraditionSubcategory(actorId, tokenId, tradition, items);
       });
 
-      return actionList;
+      return;
    }
 
-   _buildTraditionSubcategory(actionList, actorId, tokenId, tradition, spells) {
+   _buildTraditionSubcategory(actorId, tokenId, tradition, spells) {
       // Filter the spells by tradition
       const traditionSpells = spells.filter((spell) => spell.system.tradition === tradition);
 
@@ -342,12 +343,12 @@ export default class ActionHandler extends CoreActionHandler {
 
       // Add the subcategory and actions to the action list
       const subcategory = this.initializeEmptySubcategory(tradition, 'spells', tradition, 'system');
-      this._addSubcategoryToCategory(actionList, subcategory, 'spells');
+      this._addSubcategoryToCategory(subcategory, 'spells');
 
-      return this.addActionsToActionList(actionList, actions, tradition);
+      return this.addActionsToActionList(actions, tradition);
    }
 
-   _buildRecoverySubcategory(actionList, actorId, tokenId) {
+   _buildRecoverySubcategory(actorId, tokenId) {
       // Setup actions
       const actions = [
          {
@@ -371,10 +372,10 @@ export default class ActionHandler extends CoreActionHandler {
       ];
 
       // Add actions to list
-      return this.addActionsToActionList(actionList, actions, 'recovery');
+      return this.addActionsToActionList(actions, 'recovery');
    }
 
-   _buildResourcesSubcategory(actionList, actorId, tokenId, actor) {
+   _buildResourcesSubcategory(actorId, tokenId, actor) {
       // Setup actions
       const actions = [
          {
@@ -396,6 +397,6 @@ export default class ActionHandler extends CoreActionHandler {
       }
 
       // Add actions to list
-      return this.addActionsToActionList(actionList, actions, 'resources');
+      return this.addActionsToActionList(actions, 'resources');
    }
 }

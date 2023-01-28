@@ -19,6 +19,7 @@ const corePreRollHandlerFile = `${coreModulePath}scripts/roll-handlers/pre-roll-
 const coreRollHandlerFile = `${coreModulePath}scripts/roll-handlers/roll-handler.js`
 const coreSystemManagerFile = `${coreModulePath}scripts/system-manager.js`
 const coreUtilsFile = `${coreModulePath}scripts/utilities/utils.js`
+
 export const CoreActionHandler = await import(coreActionHandlerFile).then(module => module.ActionHandler)
 export const CoreActionListExtender = await import(coreActionListExtenderFile).then(module => module.ActionListExtender)
 export const CoreCategoryManager = await import(coreCategoryManagerFile).then(module => module.CategoryManager)
