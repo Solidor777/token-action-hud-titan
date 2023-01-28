@@ -6,17 +6,6 @@ import { CoreActionHandler, Logger } from './config.js'
 
 export default class ActionHandler extends CoreActionHandler {
 
-   _addSubcategoryToCategory(subcategory, categoryId) {
-      // Add subcategory to each category with a matching id
-      this.actionList.categories.forEach((category) => {
-         if (category.id === categoryId) {
-            category.subcategories = [...category.subcategories, subcategory];
-         }
-      });
-
-      return;
-   }
-
    /**
     * Build System Actions
     * @override
@@ -31,40 +20,40 @@ export default class ActionHandler extends CoreActionHandler {
       if (actor) {
          const actorId = character?.actor?.id
          const tokenId = character?.token?.id
-         return this._buildSingleCharacterActions(actorId, tokenId, actor, subcategoryIds);
+         return await this._buildSingleCharacterActions(actorId, tokenId, actor, subcategoryIds);
       }
 
       // Multi character actions
-      return this._buildMultiCharacterActions();
+      return await this._buildMultiCharacterActions();
    }
 
-   _buildSingleCharacterActions(actorId, tokenId, actor) {
-      this._buildAttributesSubcategory(actorId, tokenId);
-      this._buildResistancesSubcategory(actorId, tokenId);
-      this._buildSkillsSubcategory(actorId, tokenId);
-      this._buildWeaponsCategory(actorId, tokenId, actor);
-      this._buildEquipmentSubcategory(actorId, tokenId, actor);
-      this._buildAbilitiesCategory(actorId, tokenId, actor);
-      this._buildSpellsCategory(actorId, tokenId, actor);
-      this._buildRecoverySubcategory(actorId, tokenId);
-      this._buildResourcesSubcategory(actorId, tokenId, actor);
+   async _buildSingleCharacterActions(actorId, tokenId, actor) {
+      await this._buildAttributesSubcategory(actorId, tokenId);
+      await this._buildResistancesSubcategory(actorId, tokenId);
+      await this._buildSkillsSubcategory(actorId, tokenId);
+      await this._buildWeaponsCategory(actorId, tokenId, actor);
+      await this._buildEquipmentSubcategory(actorId, tokenId, actor);
+      await this._buildAbilitiesCategory(actorId, tokenId, actor);
+      await this._buildSpellsCategory(actorId, tokenId, actor);
+      await this._buildRecoverySubcategory(actorId, tokenId);
+      await this._buildResourcesSubcategory(actorId, tokenId, actor);
 
       return;
    }
 
-   _buildMultiCharacterActions() {
+   async _buildMultiCharacterActions() {
       const actorId = 'multi';
       const tokenId = 'multi';
-      this._buildAttributesSubcategory(actorId, tokenId);
-      this._buildResistancesSubcategory(actorId, tokenId);
-      this._buildSkillsSubcategory(actorId, tokenId);
-      this._buildRecoverySubcategory(actorId, tokenId);
-      this._buildResourcesSubcategory(actorId, tokenId);
+      await this._buildAttributesSubcategory(actorId, tokenId);
+      await this._buildResistancesSubcategory(actorId, tokenId);
+      await this._buildSkillsSubcategory(actorId, tokenId);
+      await this._buildRecoverySubcategory(actorId, tokenId);
+      await this._buildResourcesSubcategory(actorId, tokenId);
 
       return;
    }
 
-   _buildAttributesSubcategory(actorId, tokenId) {
+   async _buildAttributesSubcategory(actorId, tokenId) {
       // List entries
       const entries = [
          'body',
@@ -82,10 +71,10 @@ export default class ActionHandler extends CoreActionHandler {
       });
 
       // Add entries to action list
-      this.addActionsToActionList(actions, { id: 'attributes', type: "system" });
+      await this.addActionsToActionList(actions, { id: 'attributes', type: "system" });
    }
 
-   _buildSkillsSubcategory(actorId, tokenId) {
+   async _buildSkillsSubcategory(actorId, tokenId) {
       // List entries
       const entries = [
          'arcana',
@@ -118,10 +107,10 @@ export default class ActionHandler extends CoreActionHandler {
       });
 
       // Add entries to action list
-      return this.addActionsToActionList(actions, { id: 'skills', type: "system" });
+      return await this.addActionsToActionList(actions, { id: 'skills', type: "system" });
    }
 
-   _buildResistancesSubcategory(actorId, tokenId) {
+   async _buildResistancesSubcategory(actorId, tokenId) {
       // List entries
       const entries = [
          'reflexes',
@@ -139,10 +128,11 @@ export default class ActionHandler extends CoreActionHandler {
       });
 
       // Add entries to action list
-      return this.addActionsToActionList(actions, { id: 'resistances', type: "system" });
+      return await this.addActionsToActionList(actions, { id: 'resistances', type: "system" });
    }
 
-   _buildWeaponsCategory(actorId, tokenId, actor) {
+   async _buildWeaponsCategory(actorId, tokenId, actor) {
+
       // Filter and sort items
       const items = actor.items.filter((item) => {
          return item.type === 'weapon'
@@ -159,11 +149,20 @@ export default class ActionHandler extends CoreActionHandler {
             return 0;
          });
 
-      // Build the subcategory
-      items.forEach((weapon) => this._buildWeaponSubcategory(actorId, tokenId, weapon));
+      // Build weapons subcategories
+      for (const item of items) {
+         await this._buildWeaponSubcategory(actorId, tokenId, item);
+      }
+
+      // Clear old weapons subcategories
+      //await new Promise(r => setTimeout(r, 0));
+      const weaponsCategory = this.actionList.categories.filter((category) => category.id === 'weapons')[0].subcategories[0];
+      weaponsCategory.subcategories = weaponsCategory.subcategories.filter((category) => category.actions.length > 0);
+
+      return;
    }
 
-   _buildWeaponSubcategory(actorId, tokenId, weapon) {
+   async _buildWeaponSubcategory(actorId, tokenId, weapon) {
       // Get the weapon ID
       const weaponId = weapon._id;
 
@@ -196,9 +195,9 @@ export default class ActionHandler extends CoreActionHandler {
       }
 
       // Add the subcategory to the action list
-      const subcategory = { id: weaponId, nestId: weaponId, name: weapon.name, type: 'system' };
+      const subcategory = { id: weaponId, nestId: weaponId, name: weapon.name, type: 'system_generated' };
       const parentSubcategory = { id: 'weapons', type: 'system' };
-      this.addSubcategoryToActionList(parentSubcategory, subcategory);
+      await this.addSubcategoryToActionList(parentSubcategory, subcategory);
 
       // Add the image if appropriate
       const img = this.getImage(weapon);
@@ -207,10 +206,10 @@ export default class ActionHandler extends CoreActionHandler {
          categories.forEach((category) => category.img = img);
       }
 
-      return this.addActionsToActionList([...attacks, ...itemChecks, toggleMultiAttack], { id: weaponId, type: "system" });
+      return await this.addActionsToActionList([...attacks, ...itemChecks, toggleMultiAttack], { id: weaponId, type: "system_generated" });
    }
 
-   _buildEquipmentSubcategory(actorId, tokenId, actor) {
+   async _buildEquipmentSubcategory(actorId, tokenId, actor) {
       // Filter and sort items
       const items = actor.items.filter((item) => {
          if (item.system.check.length > 0) {
@@ -258,10 +257,10 @@ export default class ActionHandler extends CoreActionHandler {
       });
 
       // Add actions to subcategory
-      return this.addActionsToActionList(actions, { id: 'equipment', type: "system" });
+      return await this.addActionsToActionList(actions, { id: 'equipment', type: "system" });
    }
 
-   _buildAbilitiesCategory(actorId, tokenId, actor) {
+   async _buildAbilitiesCategory(actorId, tokenId, actor) {
       // Filter and sort items
       const items = actor.items.filter((item) => item.type === 'ability' && item.system.check.length > 0).sort((a, b) => {
          if (a.sort < b.sort) {
@@ -288,10 +287,10 @@ export default class ActionHandler extends CoreActionHandler {
       });
 
       // Add actions to subcategory
-      return this.addActionsToActionList(actions, { id: 'abilities', type: 'system' });
+      return await this.addActionsToActionList(actions, { id: 'abilities', type: 'system' });
    }
 
-   _buildSpellsCategory(actorId, tokenId, actor) {
+   async _buildSpellsCategory(actorId, tokenId, actor) {
       // Filter and sort items
       const items = actor.items.filter((item) => item.type === 'spell').sort((a, b) => {
          if (a.sort < b.sort) {
@@ -312,16 +311,22 @@ export default class ActionHandler extends CoreActionHandler {
       });
 
       // Create tradition subcategories
-      traditions.forEach((tradition) => {
-         this._buildTraditionSubcategory(actorId, tokenId, tradition, items);
-      });
+      for (const tradition of traditions) {
+         await this._buildTraditionSubcategory(actorId, tokenId, tradition, items);
+      }
+
+      // Clear empty tradition subcategories
+      //await new Promise(r => setTimeout(r, 0));
+      const spellsCategory = this.actionList.categories.filter((category) => category.id === 'spells')[0].subcategories[0];
+      spellsCategory.subcategories = spellsCategory.subcategories.filter((category) => category.actions.length > 0);
 
       return;
    }
 
-   _buildTraditionSubcategory(actorId, tokenId, tradition, spells) {
+   async _buildTraditionSubcategory(actorId, tokenId, tradition, spells) {
       // Filter the spells by tradition
       const traditionSpells = spells.filter((spell) => spell.system.tradition === tradition);
+      console.log(tradition);
 
       // Setup actions
       const actions = [];
@@ -347,14 +352,14 @@ export default class ActionHandler extends CoreActionHandler {
       });
 
       // Add the subcategory to the action list
-      const subcategory = { id: tradition, nestId: tradition, name: tradition, type: 'system' };
+      const subcategory = { id: tradition, nestId: tradition, name: tradition, type: 'system_generated' };
       const parentSubcategory = { id: 'traditions', type: 'system' };
-      this.addSubcategoryToActionList(parentSubcategory, subcategory);
+      await this.addSubcategoryToActionList(parentSubcategory, subcategory);
 
-      return this.addActionsToActionList(actions, { id: tradition, type: 'system' });
+      return await this.addActionsToActionList(actions, { id: tradition, type: 'system_generated' });
    }
 
-   _buildRecoverySubcategory(actorId, tokenId) {
+   async _buildRecoverySubcategory(actorId, tokenId) {
       // Setup actions
       const actions = [
          {
@@ -378,10 +383,10 @@ export default class ActionHandler extends CoreActionHandler {
       ];
 
       // Add actions to list
-      return this.addActionsToActionList(actions, { id: 'recovery', type: 'system' });
+      return await this.addActionsToActionList(actions, { id: 'recovery', type: 'system' });
    }
 
-   _buildResourcesSubcategory(actorId, tokenId, actor) {
+   async _buildResourcesSubcategory(actorId, tokenId, actor) {
       // Setup actions
       const actions = [
          {
@@ -403,6 +408,6 @@ export default class ActionHandler extends CoreActionHandler {
       }
 
       // Add actions to list
-      return this.addActionsToActionList(actions, { id: 'resources', type: 'system' });
+      return await this.addActionsToActionList(actions, { id: 'resources', type: 'system' });
    }
 }
