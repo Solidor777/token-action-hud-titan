@@ -179,7 +179,7 @@ export class RollHandler extends CoreRollHandler {
          }
 
          case 'removeExpiredEffects': {
-            return await character.removeExpiredEffects();
+            return await character.removeExpiredEffects(false);
          }
 
          case 'spendResolve': {
