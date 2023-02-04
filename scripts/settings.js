@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 export function register(updateFunc) {
    const appName = 'token-action-hud-titan'
 
@@ -33,10 +34,10 @@ export function register(updateFunc) {
          max: 10,
          step: 1
       },
+      requiresReload: true,
       onChange: (value) => {
          updateFunc(value)
       },
-      requiresReload: true
    });
 
    game.settings.register(appName, 'maxSpellTraditions', {
@@ -58,6 +59,6 @@ export function register(updateFunc) {
       requiresReload: true,
       onChange: (value) => {
          updateFunc(value)
-      }
+      },
    });
 }

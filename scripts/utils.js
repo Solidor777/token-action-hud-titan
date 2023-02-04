@@ -36,8 +36,3 @@ export async function setSetting(key, value) {
 export function localize(label) {
     return game.i18n.localize(`tokenActionHud.titan.${label}.label`);
 };
-
-export function getOptions() {
-    const retVal = game.settings.get('titan', 'getCheckOptions') === true;
-    return game.keyboard.isModifierActive(KeyboardManager.MODIFIER_KEYS.SHIFT) ? !retVal : retVal;
-}

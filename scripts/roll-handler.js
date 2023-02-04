@@ -1,6 +1,5 @@
 // Core Module Imports
 import { CoreRollHandler, CoreUtils } from './config.js'
-import { getOptions } from './utils.js';
 
 export class RollHandler extends CoreRollHandler {
    /**
@@ -56,10 +55,7 @@ export class RollHandler extends CoreRollHandler {
                return;
             }
 
-            return await character.rollAttributeCheck({
-               attribute: attribute,
-               getOptions: getOptions()
-            });
+            return await character.rollAttributeCheck({ attribute: attribute }, false);
          }
 
          // Resistance check
@@ -70,10 +66,7 @@ export class RollHandler extends CoreRollHandler {
                return;
             }
 
-            return await character.rollResistanceCheck({
-               resistance: resistance,
-               getOptions: getOptions()
-            });
+            return await character.rollResistanceCheck({ resistance: resistance }, false);
 
             return;
          }
@@ -86,11 +79,7 @@ export class RollHandler extends CoreRollHandler {
                return;
             }
 
-            return await character.rollAttributeCheck({
-               skill: skill,
-               getOptions: getOptions()
-            });
-
+            return await character.rollAttributeCheck({ skill: skill }, false);
          }
 
          // Attack check
@@ -109,11 +98,7 @@ export class RollHandler extends CoreRollHandler {
                return;
             }
 
-            return await character.rollAttackCheck({
-               itemId: itemId,
-               attackIdx: attackIdx,
-               getOptions: getOptions()
-            });
+            return await character.rollAttackCheck({ itemId: itemId, attackIdx: attackIdx }, false);
          }
 
          // Toggle multi attack 
@@ -144,11 +129,7 @@ export class RollHandler extends CoreRollHandler {
                return;
             }
 
-            return await character.rollItemCheck({
-               itemId: itemId,
-               checkIdx: checkIdx,
-               getOptions: getOptions()
-            });
+            return await character.rollItemCheck({ itemId: itemId, checkIdx: checkIdx }, false);
          }
 
          // Item check
@@ -160,10 +141,7 @@ export class RollHandler extends CoreRollHandler {
                return;
             }
 
-            return await character.rollCastingCheck({
-               itemId: itemId,
-               getOptions: getOptions()
-            });
+            return await character.rollCastingCheck({ itemId: itemId }, false);
          }
 
          case 'longRest': {

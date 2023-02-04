@@ -1,19 +1,48 @@
 {
-    "env": {
-        "browser": true,
-        "es2021": true
-    },
-    "extends": [
-        "standard"
-    ],
-    "parserOptions": {
-        "ecmaVersion": "latest",
-        "sourceType": "module"
-    },
-    "rules": {
-        "indent": [
-            "error",
-            4
-        ]
-    }
+   "env": {
+      "browser": true,
+      "es2021": true
+   },
+   "extends": [
+      "standard"
+   ],
+   "parserOptions": {
+      "ecmaVersion": "latest",
+      "sourceType": "module"
+   },
+   "rules": {
+      "no-shadow": [
+         "error",
+         {
+            "builtinGlobals": true,
+            "hoist": "all",
+            "allow": [
+               "document",
+               "event",
+               "name",
+               "parent",
+               "status",
+               "top"
+            ]
+         }
+      ],
+      "brace-style": [
+         "error",
+         "stroustrup"
+      ],
+      "no-undef": "off",
+      "object-shorthand": "off",
+      "prefer-const": "off",
+      "jsdoc/require-jsdoc": "off",
+      "space-before-function-paren": "off",
+      "jsdoc/tag-lines": "off",
+      "jsdoc/newline-after-description": "off",
+      "indent": [
+         "error",
+         3
+      ],
+      "semi": [
+         "always"
+      ]
+   }
 }
