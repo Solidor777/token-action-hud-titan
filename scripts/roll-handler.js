@@ -26,9 +26,12 @@ export class RollHandler extends CoreRollHandler {
       // Handle multiple tokens
       if (tokenId === 'multi') {
          for (const token of canvas.tokens.controlled) {
-            const character = CoreUtils.getActor(token.actor?.id, token.id)?.character;
-            if (character) {
-               await this._performAction(actionType, actionData, character);
+            const actor = CoreUtils.getActor(token.actor?.id, token.id);
+            if (actor) {
+               const character = actor.character;
+               if (character) {
+                  await this._performAction(actionType, actionData, actor, character);
+               }
             }
          }
 
@@ -37,17 +40,19 @@ export class RollHandler extends CoreRollHandler {
 
       // Handle single token
       else {
-         const character = CoreUtils.getActor(actorId, tokenId)?.character;
-         if (character) {
-            return await this._performAction(actionType, actionData, character)
+         const actor = CoreUtils.getActor(actorId, tokenId);
+         if (actor) {
+            const character = actor.character;
+            if (character) {
+               return await this._performAction(actionType, actionData, actor, character)
+            }
          }
       }
 
       return;
    }
 
-
-   async _performAction(actionType, actionData, character) {
+   async _performAction(actionType, actionData, actor, character) {
       switch (actionType) {
          // Attribute check
          case 'attributeCheck': {
@@ -168,18 +173,34 @@ export class RollHandler extends CoreRollHandler {
          }
 
          case 'longRest': {
+            const sheet = actor._sheet;
+            if (sheet) {
+               return await sheet.longRest(true);
+            }
             return await character.longRest(true);
          }
 
          case 'shortRest': {
+            const sheet = actor._sheet;
+            if (sheet) {
+               return await sheet.shortRest(true);
+            }
             return await character.shortRest(true);
          }
 
          case 'removeCombatEffects': {
+            const sheet = actor._sheet;
+            if (sheet) {
+               return await sheet.removeCombatEffects(true);
+            }
             return await character.removeCombatEffects(true);
          }
 
          case 'removeExpiredEffects': {
+            const sheet = actor._sheet;
+            if (sheet) {
+               return await sheet.removeExpiredEffects(true);
+            }
             return await character.removeExpiredEffects(true);
          }
 
