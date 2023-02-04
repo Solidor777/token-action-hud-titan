@@ -36,7 +36,7 @@
       "abilities.label": "Abilities",
       "spells.label": "Spells",
       "recovery.label": "Recovery",
-      "removeTemporaryEffects.label": "Remove Temporary Effects",
+      "removeCombatEffects.label": "Remove Combat Effects",
       "shortRest.label": "Short Rest",
       "longRest.label": "Long Rest",
       "resources.label": "Resources",
@@ -48,6 +48,14 @@
         "showUnEquippedEquipment": {
           "label": "Show Un-equipped Equipment",
           "hint": "If true, actions will be shown for items that can, be equipped but are not currently equipped."
+        },
+        "maxWeapons": {
+          "label": "Max Weapons",
+          "hint": "The maximum number of Weapons to display on the Action HUD."
+        },
+        "maxSpellTraditions": {
+          "label": "Max Spell Traditions",
+          "hint": "The maximum number of Traditions to display on the Action HUD."
         }
       }
     }

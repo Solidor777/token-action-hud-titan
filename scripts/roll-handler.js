@@ -175,8 +175,8 @@ export class RollHandler extends CoreRollHandler {
             return await character.shortRest(true);
          }
 
-         case 'removeTemporaryEffects': {
-            return await character.removeTemporaryEffects(true);
+         case 'removeCombatEffects': {
+            return await character.removeCombatEffects(true);
          }
 
          case 'spendResolve': {

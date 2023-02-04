@@ -132,7 +132,6 @@ export default class ActionHandler extends CoreActionHandler {
    }
 
    async _buildWeaponsCategory(actorId, tokenId, actor) {
-
       // Filter and sort items
       const items = actor.items.filter((item) => {
          return item.type === 'weapon'
@@ -150,63 +149,56 @@ export default class ActionHandler extends CoreActionHandler {
          });
 
       // Build weapons subcategories
-      for (const item of items) {
-         await this._buildWeaponSubcategory(actorId, tokenId, item);
+      const maxWeapons = Math.min(items.length, getSetting('maxWeapons'));
+      for (let idx = 0; idx < maxWeapons; idx++) {
+         const item = items[idx];
+         await this._buildWeaponSubcategory(actorId, tokenId, item, idx);
       }
-
-      // Clear old weapons subcategories
-      //await new Promise(r => setTimeout(r, 0));
-      const weaponsCategory = this.actionList.categories.filter((category) => category.id === 'weapons')[0].subcategories[0];
-      weaponsCategory.subcategories = weaponsCategory.subcategories.filter((category) => category.actions.length > 0);
 
       return;
    }
 
-   async _buildWeaponSubcategory(actorId, tokenId, weapon) {
+   async _buildWeaponSubcategory(actorId, tokenId, item, idx) {
       // Get the weapon ID
-      const weaponId = weapon._id;
+      const itemId = item._id;
 
       // Build attack actions
-      const attacks = weapon.system.attack.map((attack, idx) => {
+      const attacks = item.system.attack.map((attack, idx) => {
          return {
-            id: `${weaponId},attack,${idx}`,
+            id: `${itemId}|attack,${idx}`,
             name: attack.label,
-            encodedValue: [actorId, tokenId, 'attackCheck', weaponId, idx].join(this.delimiter),
+            encodedValue: [actorId, tokenId, 'attackCheck', itemId, idx].join(this.delimiter),
             icon1: attack.type === 'melee' ? '<i class="fas fa-sword"></i>' : '<i class="fas fa-bow-arrow"></i>'
          };
       });
 
       // Build item check actions
-      const itemChecks = weapon.system.check.map((check, idx) => {
+      const itemChecks = item.system.check.map((check, idx) => {
          return {
-            id: `${weaponId},itemCheck,${idx}`,
+            id: `${itemId}|itemCheck,${idx}`,
             name: check.label,
-            encodedValue: [actorId, tokenId, 'itemCheck', weaponId, idx].join(this.delimiter),
+            encodedValue: [actorId, tokenId, 'itemCheck', itemId, idx].join(this.delimiter),
             icon1: '<i class="fas fa-dice"></i>'
          };
       });
 
       // Build toggle multi attack action
       const toggleMultiAttack = {
-         id: `${weaponId},toggleMultiAttack`,
-         name: localize(weapon.system.multiAttack ? 'multiAttackOn' : 'multiAttackOff'),
-         encodedValue: [actorId, tokenId, 'toggleMultiAttack', weaponId].join(this.delimiter),
-         icon1: weapon.system.multiAttack ? '<i class="fas fa-swords"></i>' : '<i class="fas fa-sword"></i>'
+         id: `${itemId}|toggleMultiAttack`,
+         name: localize(item.system.multiAttack ? 'multiAttackOn' : 'multiAttackOff'),
+         encodedValue: [actorId, tokenId, 'toggleMultiAttack', itemId].join(this.delimiter),
+         icon1: item.system.multiAttack ? '<i class="fas fa-swords"></i>' : '<i class="fas fa-sword"></i>'
       }
 
-      // Add the subcategory to the action list
-      const subcategory = { id: weaponId, nestId: weaponId, name: weapon.name, type: 'system_generated' };
-      const parentSubcategory = { id: 'weapons', type: 'system' };
-      await this.addSubcategoryToActionList(parentSubcategory, subcategory);
+      // Update the subcategory
+      const subcategoryId = `weapon_${idx}`;
+      const subcategoryName = item.name;
+      const subcategoryImg = this.getImage(item);
+      const categories = this.categoryManager.getFlattenedSubcategories({ id: subcategoryId, type: "system" });
+      categories[0].name = subcategoryName;
+      categories[0].img = subcategoryImg;
 
-      // Add the image if appropriate
-      const img = this.getImage(weapon);
-      if (img !== '') {
-         const categories = this.categoryManager.getFlattenedSubcategories({ id: weaponId, type: "system" });
-         categories.forEach((category) => category.img = img);
-      }
-
-      return await this.addActionsToActionList([...attacks, ...itemChecks, toggleMultiAttack], { id: weaponId, type: "system_generated" });
+      return await this.addActionsToActionList([...attacks, ...itemChecks, toggleMultiAttack], { id: subcategoryId, type: "system" });
    }
 
    async _buildEquipmentSubcategory(actorId, tokenId, actor) {
@@ -248,7 +240,7 @@ export default class ActionHandler extends CoreActionHandler {
          const itemId = item._id;
          item.system.check.forEach((check, idx) => {
             actions.push({
-               id: `${itemId},itemCheck`,
+               id: `${itemId}|itemCheck`,
                name: `${item.name} (${check.label})`,
                encodedValue: [actorId, tokenId, 'itemCheck', itemId, idx].join(this.delimiter),
                img: this.getImage(item)
@@ -278,7 +270,7 @@ export default class ActionHandler extends CoreActionHandler {
          const itemId = item._id;
          item.system.check.forEach((check, idx) => {
             actions.push({
-               id: `${itemId},itemCheck`,
+               id: `${itemId}|itemCheck`,
                name: `${item.name} (${check.label})`,
                encodedValue: [actorId, tokenId, 'itemCheck', itemId, idx].join(this.delimiter),
                img: this.getImage(item)
@@ -310,23 +302,19 @@ export default class ActionHandler extends CoreActionHandler {
          }
       });
 
-      // Create tradition subcategories
-      for (const tradition of traditions) {
-         await this._buildTraditionSubcategory(actorId, tokenId, tradition, items);
+      // Build spell tradition subcategories
+      const MaxSpellTraditions = Math.min(items.length, getSetting('maxSpellTraditions'));
+      for (let idx = 0; idx < MaxSpellTraditions; idx++) {
+         const tradition = traditions[idx];
+         await this._buildSpellTraditionSubcategory(actorId, tokenId, tradition, items, idx);
       }
-
-      // Clear empty tradition subcategories
-      //await new Promise(r => setTimeout(r, 0));
-      const spellsCategory = this.actionList.categories.filter((category) => category.id === 'spells')[0].subcategories[0];
-      spellsCategory.subcategories = spellsCategory.subcategories.filter((category) => category.actions.length > 0);
 
       return;
    }
 
-   async _buildTraditionSubcategory(actorId, tokenId, tradition, spells) {
+   async _buildSpellTraditionSubcategory(actorId, tokenId, tradition, items, idx) {
       // Filter the spells by tradition
-      const traditionSpells = spells.filter((spell) => spell.system.tradition === tradition);
-      console.log(tradition);
+      const traditionSpells = items.filter((spell) => spell.system.tradition === tradition);
 
       // Setup actions
       const actions = [];
@@ -334,7 +322,7 @@ export default class ActionHandler extends CoreActionHandler {
          // Add casting check
          const itemId = item._id;
          actions.push({
-            id: `${itemId},castingCheck`,
+            id: `${itemId}|castingCheck`,
             name: `${item.name}`,
             encodedValue: [actorId, tokenId, 'castingCheck', itemId].join(this.delimiter),
             img: this.getImage(item)
@@ -343,7 +331,7 @@ export default class ActionHandler extends CoreActionHandler {
          // Add item checks
          item.system.check.forEach((check, idx) => {
             actions.push({
-               id: `${itemId},itemCheck`,
+               id: `${itemId}|itemCheck`,
                name: `${item.name} (${check.label})`,
                encodedValue: [actorId, tokenId, 'itemCheck', itemId, idx].join(this.delimiter),
                img: this.getImage(item)
@@ -351,12 +339,13 @@ export default class ActionHandler extends CoreActionHandler {
          });
       });
 
-      // Add the subcategory to the action list
-      const subcategory = { id: tradition, nestId: tradition, name: tradition, type: 'system_generated' };
-      const parentSubcategory = { id: 'traditions', type: 'system' };
-      await this.addSubcategoryToActionList(parentSubcategory, subcategory);
+      // Update the subcategory
+      const subcategoryId = `tradition_${idx}`;
+      const subcategoryName = tradition;
+      const categories = this.categoryManager.getFlattenedSubcategories({ id: subcategoryId, type: "system" });
+      categories[0].name = subcategoryName;
 
-      return await this.addActionsToActionList(actions, { id: tradition, type: 'system_generated' });
+      return await this.addActionsToActionList(actions, { id: subcategoryId, type: 'system' });
    }
 
    async _buildRecoverySubcategory(actorId, tokenId) {
@@ -375,9 +364,9 @@ export default class ActionHandler extends CoreActionHandler {
             icon1: '<i class="fas fa-face-exhaling"></i>'
          },
          {
-            id: `removeTemporaryEffects`,
-            name: localize('removeTemporaryEffects'),
-            encodedValue: [actorId, tokenId, 'removeTemporaryEffects'].join(this.delimiter),
+            id: `removeCombatEffects`,
+            name: localize('removeCombatEffects'),
+            encodedValue: [actorId, tokenId, 'removeCombatEffects'].join(this.delimiter),
             icon1: '<i class="fas fa-arrow-rotate-left"></i>'
          }
       ];
