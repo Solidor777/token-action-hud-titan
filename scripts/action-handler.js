@@ -368,6 +368,12 @@ export default class ActionHandler extends CoreActionHandler {
             name: localize('removeCombatEffects'),
             encodedValue: [actorId, tokenId, 'removeCombatEffects'].join(this.delimiter),
             icon1: '<i class="fas fa-arrow-rotate-left"></i>'
+         },
+         {
+            id: `removeExpiredEffects`,
+            name: localize('removeExpiredEffects'),
+            encodedValue: [actorId, tokenId, 'removeExpiredEffects'].join(this.delimiter),
+            icon1: '<i class="fas fa-clock"></i>'
          }
       ];
 

@@ -37,6 +37,7 @@
       "spells.label": "Spells",
       "recovery.label": "Recovery",
       "removeCombatEffects.label": "Remove Combat Effects",
+      "removeExpiredEffects.label": "Remove Expired Effects",
       "shortRest.label": "Short Rest",
       "longRest.label": "Long Rest",
       "resources.label": "Resources",
