@@ -45,6 +45,7 @@
       "utility.label": "Utility",
       "inspiration.label": "Inspiration",
       "traditions.label": "Traditions",
+      "effects.label": "Effects",
       "settings": {
         "showUnEquippedEquipment": {
           "label": "Show Un-equipped Equipment",

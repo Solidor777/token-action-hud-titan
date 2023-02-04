@@ -161,7 +161,13 @@ export function createDefaults() {
                   id: 'resources',
                   name: localize('resources'),
                   type: 'system'
-               }
+               },
+               {
+                  nestId: 'utility_effects',
+                  id: 'effects',
+                  name: localize('effects'),
+                  type: 'system'
+               },
             ],
          }
       ],
@@ -172,7 +178,9 @@ export function createDefaults() {
          ...getWeaponSubcategories(maxWeapons),
          { id: 'abilities', name: localize('abilities'), type: 'system', hasDerivedSubcategories: false },
          ...getSpellTraditionSubcategories(maxSpells),
-         { id: 'utility', name: localize('skills'), type: 'system', hasDerivedSubcategories: false },
+         { id: 'recovery', name: localize('recovery'), type: 'system', hasDerivedSubcategories: false },
+         { id: 'resources', name: localize('resources'), type: 'system', hasDerivedSubcategories: false },
+         { id: 'effects', name: localize('effects'), type: 'system', hasDerivedSubcategories: false },
       ]
    }
 }

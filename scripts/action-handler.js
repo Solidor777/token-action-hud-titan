@@ -37,6 +37,7 @@ export default class ActionHandler extends CoreActionHandler {
       await this._buildSpellsCategory(actorId, tokenId, actor);
       await this._buildRecoverySubcategory(actorId, tokenId);
       await this._buildResourcesSubcategory(actorId, tokenId, actor);
+      await this._buildEffectsSubcategory(actorId, tokenId, actor);
 
       return;
    }
@@ -49,6 +50,7 @@ export default class ActionHandler extends CoreActionHandler {
       await this._buildSkillsSubcategory(actorId, tokenId);
       await this._buildRecoverySubcategory(actorId, tokenId);
       await this._buildResourcesSubcategory(actorId, tokenId);
+      await this._buildEffectsSubcategory(actorId, tokenId, actor);
 
       return;
    }
@@ -369,12 +371,6 @@ export default class ActionHandler extends CoreActionHandler {
             encodedValue: [actorId, tokenId, 'removeCombatEffects'].join(this.delimiter),
             icon1: '<i class="fas fa-arrow-rotate-left"></i>'
          },
-         {
-            id: `removeExpiredEffects`,
-            name: localize('removeExpiredEffects'),
-            encodedValue: [actorId, tokenId, 'removeExpiredEffects'].join(this.delimiter),
-            icon1: '<i class="fas fa-clock"></i>'
-         }
       ];
 
       // Add actions to list
@@ -404,5 +400,20 @@ export default class ActionHandler extends CoreActionHandler {
 
       // Add actions to list
       return await this.addActionsToActionList(actions, { id: 'resources', type: 'system' });
+   }
+
+   async _buildEffectsSubcategory(actorId, tokenId, actor) {
+      // Setup actions
+      const actions = [
+         {
+            id: `removeExpiredEffects`,
+            name: localize('removeExpiredEffects'),
+            encodedValue: [actorId, tokenId, 'removeExpiredEffects'].join(this.delimiter),
+            icon1: '<i class="fas fa-clock"></i>'
+         }
+      ];
+
+      // Add actions to list
+      return await this.addActionsToActionList(actions, { id: 'effects', type: 'system' });
    }
 }
