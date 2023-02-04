@@ -199,9 +199,9 @@ export class RollHandler extends CoreRollHandler {
          case 'removeExpiredEffects': {
             const sheet = actor._sheet;
             if (sheet) {
-               return await sheet.removeExpiredEffects(true);
+               return await sheet.removeExpiredEffects(false);
             }
-            return await character.removeExpiredEffects(true);
+            return await character.removeExpiredEffects();
          }
 
          case 'spendResolve': {
