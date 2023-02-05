@@ -50,7 +50,7 @@ export default class ActionHandler extends CoreActionHandler {
       await this._buildSkillsSubcategory(actorId, tokenId);
       await this._buildRecoverySubcategory(actorId, tokenId);
       await this._buildResourcesSubcategory(actorId, tokenId);
-      await this._buildEffectsSubcategory(actorId, tokenId, actor);
+      await this._buildEffectsSubcategory(actorId, tokenId);
 
       return;
    }
@@ -402,7 +402,7 @@ export default class ActionHandler extends CoreActionHandler {
       return await this.addActionsToActionList(actions, { id: 'resources', type: 'system' });
    }
 
-   async _buildEffectsSubcategory(actorId, tokenId, actor) {
+   async _buildEffectsSubcategory(actorId, tokenId) {
       // Setup actions
       const actions = [
          {
