@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 export function register(updateFunc) {
-   const appName = 'token-action-hud-titan'
+   const appName = 'token-action-hud-titan';
 
    game.settings.register(appName, 'showUnEquippedEquipment', {
       name: game.i18n.localize(
@@ -14,7 +14,7 @@ export function register(updateFunc) {
       type: Boolean,
       default: false,
       onChange: (value) => {
-         updateFunc(value)
+         updateFunc(value);
       }
    });
 
@@ -36,7 +36,7 @@ export function register(updateFunc) {
       },
       requiresReload: true,
       onChange: (value) => {
-         updateFunc(value)
+         updateFunc(value);
       }
    });
 
@@ -58,7 +58,7 @@ export function register(updateFunc) {
       },
       requiresReload: true,
       onChange: (value) => {
-         updateFunc(value)
+         updateFunc(value);
       }
    });
 }

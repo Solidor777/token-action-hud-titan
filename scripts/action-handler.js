@@ -1,8 +1,8 @@
 // System Module Imports
-import { getSetting, localize } from './utils.js'
+import { getSetting, localize } from './utils.js';
 
 // Core Module Imports
-import { CoreActionHandler, CoreUtils } from './config.js'
+import { CoreActionHandler, CoreUtils } from './config.js';
 
 export default class ActionHandler extends CoreActionHandler {
    /**
@@ -13,12 +13,12 @@ export default class ActionHandler extends CoreActionHandler {
     * @returns {object}
     */
    async buildSystemActions(character, subcategoryIds) {
-      const actor = character?.actor
+      const actor = character?.actor;
 
       // Single actor actions
       if (actor) {
-         const actorId = character?.actor?.id
-         const tokenId = character?.token?.id
+         const actorId = character?.actor?.id;
+         const tokenId = character?.token?.id;
          return await this._buildSingleCharacterActions(actorId, tokenId, actor, subcategoryIds);
       }
 
@@ -189,7 +189,7 @@ export default class ActionHandler extends CoreActionHandler {
          name: localize(item.system.multiAttack ? 'multiAttackOn' : 'multiAttackOff'),
          encodedValue: [actorId, tokenId, 'toggleMultiAttack', itemId].join(this.delimiter),
          icon1: item.system.multiAttack ? '<i class="fas fa-swords"></i>' : '<i class="fas fa-sword"></i>'
-      }
+      };
 
       // Update the subcategory
       const subcategoryId = `weapon_${idx}`;

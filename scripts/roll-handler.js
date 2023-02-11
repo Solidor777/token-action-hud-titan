@@ -1,5 +1,5 @@
 // Core Module Imports
-import { CoreRollHandler, CoreUtils } from './config.js'
+import { CoreRollHandler, CoreUtils } from './config.js';
 
 export class RollHandler extends CoreRollHandler {
    /**
@@ -38,7 +38,7 @@ export class RollHandler extends CoreRollHandler {
       else {
          const character = CoreUtils.getActor(actorId, tokenId)?.character;
          if (character) {
-            return await this._performAction(actionType, actionData, character)
+            return await this._performAction(actionType, actionData, character);
          }
       }
 

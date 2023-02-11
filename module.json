@@ -9,7 +9,7 @@
          "flags": {}
       }
    ],
-   "url": "https://github.com/Larkinabout/fvtt-token-action-hud-dnd5e",
+   "url": "https://github.com/Solidor777/token-action-hud-titan",
    "flags": {},
    "version": "1.0.0",
    "compatibility": {
@@ -48,9 +48,9 @@
             "type": "module",
             "compatibility": [
                {
-                  "minimum": "1.1.0",
-                  "maximum": "1.1",
-                  "verified": "1.1.0"
+                  "minimum": "1.2.0",
+                  "maximum": "1.2",
+                  "verified": "1.2.0"
                }
             ]
          }

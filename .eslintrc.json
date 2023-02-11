@@ -48,7 +48,7 @@
          }
       ],
       "semi": [
-         0,
+         2,
          "always"
       ],
       "no-unused-vars": [

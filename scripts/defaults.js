@@ -182,5 +182,5 @@ export function createDefaults() {
          { id: 'resources', name: localize('resources'), type: 'system', hasDerivedSubcategories: false },
          { id: 'effects', name: localize('effects'), type: 'system', hasDerivedSubcategories: false }
       ]
-   }
+   };
 }
