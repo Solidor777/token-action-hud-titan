@@ -17,7 +17,7 @@
       "verified": "10.291"
    },
    "esmodules": [
-      "./token-action-hud-titan.min.js"
+      "./scripts/token-action-hud-titan.min.js"
    ],
    "scripts": [],
    "styles": [],

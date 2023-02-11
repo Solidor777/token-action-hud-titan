@@ -9,11 +9,11 @@ export default [
             'scripts/*/*.js'
          ],
          exclude: [
-            'token-action-hud-titan.min.js']
+            'scripts/token-action-hud-titan.min.js']
       },
       output: {
          format: 'esm',
-         file: 'token-action-hud-titan.min.js'
+         file: 'scripts/token-action-hud-titan.min.js'
       },
       plugins: [
          terser({ keep_classnames: true, keep_fnames: true }),
