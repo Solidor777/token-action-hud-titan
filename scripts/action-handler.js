@@ -2,10 +2,9 @@
 import { getSetting, localize } from './utils.js'
 
 // Core Module Imports
-import { CoreActionHandler, Logger } from './config.js'
+import { CoreActionHandler, CoreUtils } from './config.js'
 
 export default class ActionHandler extends CoreActionHandler {
-
    /**
     * Build System Actions
     * @override
@@ -73,7 +72,7 @@ export default class ActionHandler extends CoreActionHandler {
       });
 
       // Add entries to action list
-      await this.addActionsToActionList(actions, { id: 'attributes', type: "system" });
+      await this.addActionsToActionList(actions, { id: 'attributes', type: 'system' });
    }
 
    async _buildSkillsSubcategory(actorId, tokenId) {
@@ -109,7 +108,7 @@ export default class ActionHandler extends CoreActionHandler {
       });
 
       // Add entries to action list
-      return await this.addActionsToActionList(actions, { id: 'skills', type: "system" });
+      return await this.addActionsToActionList(actions, { id: 'skills', type: 'system' });
    }
 
    async _buildResistancesSubcategory(actorId, tokenId) {
@@ -130,15 +129,15 @@ export default class ActionHandler extends CoreActionHandler {
       });
 
       // Add entries to action list
-      return await this.addActionsToActionList(actions, { id: 'resistances', type: "system" });
+      return await this.addActionsToActionList(actions, { id: 'resistances', type: 'system' });
    }
 
    async _buildWeaponsCategory(actorId, tokenId, actor) {
       // Filter and sort items
       const items = actor.items.filter((item) => {
-         return item.type === 'weapon'
-            && (item.system.attack.length > 0 || item.system.check.length > 0)
-            && (getSetting('showUnEquippedEquipment') || item.system.equipped);
+         return item.type === 'weapon' &&
+            (item.system.attack.length > 0 || item.system.check.length > 0) &&
+            (getSetting('showUnEquippedEquipment') || item.system.equipped);
       })
          .sort((a, b) => {
             if (a.sort < b.sort) {
@@ -165,21 +164,21 @@ export default class ActionHandler extends CoreActionHandler {
       const itemId = item._id;
 
       // Build attack actions
-      const attacks = item.system.attack.map((attack, idx) => {
+      const attacks = item.system.attack.map((attack, attackIdx) => {
          return {
-            id: `${itemId}|attack,${idx}`,
+            id: `${itemId}|attack,${attackIdx}`,
             name: attack.label,
-            encodedValue: [actorId, tokenId, 'attackCheck', itemId, idx].join(this.delimiter),
+            encodedValue: [actorId, tokenId, 'attackCheck', itemId, attackIdx].join(this.delimiter),
             icon1: attack.type === 'melee' ? '<i class="fas fa-sword"></i>' : '<i class="fas fa-bow-arrow"></i>'
          };
       });
 
       // Build item check actions
-      const itemChecks = item.system.check.map((check, idx) => {
+      const itemChecks = item.system.check.map((check, checkIdx) => {
          return {
-            id: `${itemId}|itemCheck,${idx}`,
+            id: `${itemId}|itemCheck,${checkIdx}`,
             name: check.label,
-            encodedValue: [actorId, tokenId, 'itemCheck', itemId, idx].join(this.delimiter),
+            encodedValue: [actorId, tokenId, 'itemCheck', itemId, checkIdx].join(this.delimiter),
             icon1: '<i class="fas fa-dice"></i>'
          };
       });
@@ -195,12 +194,12 @@ export default class ActionHandler extends CoreActionHandler {
       // Update the subcategory
       const subcategoryId = `weapon_${idx}`;
       const subcategoryName = item.name;
-      const subcategoryImg = this.getImage(item);
-      const categories = this.categoryManager.getFlattenedSubcategories({ id: subcategoryId, type: "system" });
+      const subcategoryImg = CoreUtils.getImage(item);
+      const categories = this.categoryManager.getFlattenedSubcategories({ id: subcategoryId, type: 'system' });
       categories[0].name = subcategoryName;
       categories[0].img = subcategoryImg;
 
-      return await this.addActionsToActionList([...attacks, ...itemChecks, toggleMultiAttack], { id: subcategoryId, type: "system" });
+      return await this.addActionsToActionList([...attacks, ...itemChecks, toggleMultiAttack], { id: subcategoryId, type: 'system' });
    }
 
    async _buildEquipmentSubcategory(actorId, tokenId, actor) {
@@ -226,6 +225,8 @@ export default class ActionHandler extends CoreActionHandler {
                }
             }
          }
+
+         return false;
       }).sort((a, b) => {
          if (a.sort < b.sort) {
             return -1;
@@ -245,13 +246,13 @@ export default class ActionHandler extends CoreActionHandler {
                id: `${itemId}|itemCheck`,
                name: `${item.name} (${check.label})`,
                encodedValue: [actorId, tokenId, 'itemCheck', itemId, idx].join(this.delimiter),
-               img: this.getImage(item)
+               img: CoreUtils.getImage(item)
             });
          });
       });
 
       // Add actions to subcategory
-      return await this.addActionsToActionList(actions, { id: 'equipment', type: "system" });
+      return await this.addActionsToActionList(actions, { id: 'equipment', type: 'system' });
    }
 
    async _buildAbilitiesCategory(actorId, tokenId, actor) {
@@ -275,7 +276,7 @@ export default class ActionHandler extends CoreActionHandler {
                id: `${itemId}|itemCheck`,
                name: `${item.name} (${check.label})`,
                encodedValue: [actorId, tokenId, 'itemCheck', itemId, idx].join(this.delimiter),
-               img: this.getImage(item)
+               img: CoreUtils.getImage(item)
             });
          });
       });
@@ -327,16 +328,16 @@ export default class ActionHandler extends CoreActionHandler {
             id: `${itemId}|castingCheck`,
             name: `${item.name}`,
             encodedValue: [actorId, tokenId, 'castingCheck', itemId].join(this.delimiter),
-            img: this.getImage(item)
+            img: CoreUtils.getImage(item)
          });
 
          // Add item checks
-         item.system.check.forEach((check, idx) => {
+         item.system.check.forEach((check, checkIdx) => {
             actions.push({
                id: `${itemId}|itemCheck`,
                name: `${item.name} (${check.label})`,
-               encodedValue: [actorId, tokenId, 'itemCheck', itemId, idx].join(this.delimiter),
-               img: this.getImage(item)
+               encodedValue: [actorId, tokenId, 'itemCheck', itemId, checkIdx].join(this.delimiter),
+               img: CoreUtils.getImage(item)
             });
          });
       });
@@ -344,7 +345,7 @@ export default class ActionHandler extends CoreActionHandler {
       // Update the subcategory
       const subcategoryId = `tradition_${idx}`;
       const subcategoryName = tradition;
-      const categories = this.categoryManager.getFlattenedSubcategories({ id: subcategoryId, type: "system" });
+      const categories = this.categoryManager.getFlattenedSubcategories({ id: subcategoryId, type: 'system' });
       categories[0].name = subcategoryName;
 
       return await this.addActionsToActionList(actions, { id: subcategoryId, type: 'system' });
@@ -354,23 +355,23 @@ export default class ActionHandler extends CoreActionHandler {
       // Setup actions
       const actions = [
          {
-            id: `longRest`,
+            id: 'longRest',
             name: localize('longRest'),
             encodedValue: [actorId, tokenId, 'longRest'].join(this.delimiter),
             icon1: '<i class="fas fa-bed"></i>'
          },
          {
-            id: `shortRest`,
+            id: 'shortRest',
             name: localize('shortRest'),
             encodedValue: [actorId, tokenId, 'shortRest'].join(this.delimiter),
             icon1: '<i class="fas fa-face-exhaling"></i>'
          },
          {
-            id: `removeCombatEffects`,
+            id: 'removeCombatEffects',
             name: localize('removeCombatEffects'),
             encodedValue: [actorId, tokenId, 'removeCombatEffects'].join(this.delimiter),
             icon1: '<i class="fas fa-arrow-rotate-left"></i>'
-         },
+         }
       ];
 
       // Add actions to list
@@ -381,7 +382,7 @@ export default class ActionHandler extends CoreActionHandler {
       // Setup actions
       const actions = [
          {
-            id: `spendResolve`,
+            id: 'spendResolve',
             name: localize('spendResolve'),
             encodedValue: [actorId, tokenId, 'spendResolve'].join(this.delimiter),
             icon1: '<i class="fas fa-bolt"></i>'
@@ -391,7 +392,7 @@ export default class ActionHandler extends CoreActionHandler {
       // Add toggle inspiration action for players
       if (actor?.type === 'player') {
          actions.push({
-            id: `toggleInspiration`,
+            id: 'toggleInspiration',
             name: localize('inspiration'),
             encodedValue: [actorId, tokenId, 'toggleInspiration'].join(this.delimiter),
             icon1: actor.system.inspiration ? '<i class="fas fa-sun"></i>' : '<i class="far fa-circle"></i>'
@@ -406,7 +407,7 @@ export default class ActionHandler extends CoreActionHandler {
       // Setup actions
       const actions = [
          {
-            id: `removeExpiredEffects`,
+            id: 'removeExpiredEffects',
             name: localize('removeExpiredEffects'),
             encodedValue: [actorId, tokenId, 'removeExpiredEffects'].join(this.delimiter),
             icon1: '<i class="fas fa-clock"></i>'

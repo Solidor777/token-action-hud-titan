@@ -10,7 +10,7 @@ export class RollHandler extends CoreRollHandler {
     */
    async doHandleActionEvent(event, encodedValue) {
       // Get the payload
-      const actionData = encodedValue.split("|");
+      const actionData = encodedValue.split('|');
       if (actionData.length < 3) {
          console.error('TOKEN ACTION HUD (TITAN) | Action Failed. Incomplete Action Data.');
          return;
@@ -67,8 +67,6 @@ export class RollHandler extends CoreRollHandler {
             }
 
             return await character.rollResistanceCheck({ resistance: resistance }, false);
-
-            return;
          }
 
          // Skill check
@@ -101,7 +99,7 @@ export class RollHandler extends CoreRollHandler {
             return await character.rollAttackCheck({ itemId: itemId, attackIdx: attackIdx }, false);
          }
 
-         // Toggle multi attack 
+         // Toggle multi attack
          case 'toggleMultiAttack': {
             const itemId = actionData[0];
             if (!itemId) {

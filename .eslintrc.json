@@ -10,6 +10,9 @@
       "ecmaVersion": "latest",
       "sourceType": "module"
    },
+   "ignorePatterns": [
+      "*.min.js"
+   ],
    "rules": {
       "no-shadow": [
          "error",
@@ -44,7 +47,10 @@
             "SwitchCase": 1
          }
       ],
-      "semi": 2,
+      "semi": [
+         0,
+         "always"
+      ],
       "no-unused-vars": [
          "warn",
          {
@@ -52,6 +58,7 @@
             "args": "after-used",
             "ignoreRestSiblings": false
          }
-      ]
+      ],
+      "no-useless-return": 0
    }
 }

@@ -37,7 +37,7 @@ export function register(updateFunc) {
       requiresReload: true,
       onChange: (value) => {
          updateFunc(value)
-      },
+      }
    });
 
    game.settings.register(appName, 'maxSpellTraditions', {
@@ -59,6 +59,6 @@ export function register(updateFunc) {
       requiresReload: true,
       onChange: (value) => {
          updateFunc(value)
-      },
+      }
    });
 }

@@ -1,4 +1,4 @@
-import { localize, getSetting } from "./utils";
+import { localize, getSetting } from './utils';
 
 /**
  * Default categories and subcategories
@@ -83,7 +83,7 @@ export function createDefaults() {
                name: localize('attributes'),
                type: 'system',
                hasDerivedSubcategories: false
-            }],
+            }]
          },
          {
             nestId: 'resistances',
@@ -95,7 +95,7 @@ export function createDefaults() {
                name: localize('resistances'),
                type: 'system',
                hasDerivedSubcategories: false
-            }],
+            }]
          },
          {
             nestId: 'skills',
@@ -107,7 +107,7 @@ export function createDefaults() {
                name: localize('skills'),
                type: 'system',
                hasDerivedSubcategories: false
-            }],
+            }]
          },
          {
             nestId: 'weapons',
@@ -125,7 +125,7 @@ export function createDefaults() {
                name: localize('equipment'),
                type: 'system',
                hasDerivedSubcategories: false
-            }],
+            }]
          },
          {
             nestId: 'abilities',
@@ -137,7 +137,7 @@ export function createDefaults() {
                name: localize('abilities'),
                type: 'system',
                hasDerivedSubcategories: false
-            }],
+            }]
          },
          {
             nestId: 'spells',
@@ -167,8 +167,8 @@ export function createDefaults() {
                   id: 'effects',
                   name: localize('effects'),
                   type: 'system'
-               },
-            ],
+               }
+            ]
          }
       ],
       subcategories: [
@@ -180,7 +180,7 @@ export function createDefaults() {
          ...getSpellTraditionSubcategories(maxSpells),
          { id: 'recovery', name: localize('recovery'), type: 'system', hasDerivedSubcategories: false },
          { id: 'resources', name: localize('resources'), type: 'system', hasDerivedSubcategories: false },
-         { id: 'effects', name: localize('effects'), type: 'system', hasDerivedSubcategories: false },
+         { id: 'effects', name: localize('effects'), type: 'system', hasDerivedSubcategories: false }
       ]
    }
 }
