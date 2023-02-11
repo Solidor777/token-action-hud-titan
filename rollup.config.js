@@ -9,8 +9,6 @@ export default [
                 'scripts/*/*.js'
             ],
             exclude: [
-                'scripts/constants.js',
-                'scripts/defaults.js',
                 'scripts/token-action-hud-titan.min.js']
         },
         output: {

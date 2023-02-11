@@ -1,6 +1,6 @@
 {
    "id": "token-action-hud-titan",
-   "title": "Token Action HUD Titan",
+   "title": "Token Action HUD TITAN",
    "description": "Token Action HUD is a repositionable HUD of actions for a selected token",
    "authors": [
       {
@@ -9,21 +9,23 @@
          "flags": {}
       }
    ],
-   "url": "https://github.com/Solidor777/token-action-hud-titan",
+   "url": "https://github.com/Larkinabout/fvtt-token-action-hud-dnd5e",
    "flags": {},
    "version": "1.0.0",
    "compatibility": {
       "minimum": "10",
       "verified": "10.291"
    },
+   "esmodules": [
+      "./scripts/token-action-hud-titan.min.js"
+   ],
    "scripts": [],
    "styles": [],
    "languages": [
       {
          "lang": "en",
          "name": "English",
-         "path": "languages/en.json",
-         "flags": {}
+         "path": "languages/en.json"
       }
    ],
    "packs": [],
@@ -32,10 +34,12 @@
          {
             "id": "titan",
             "type": "system",
-            "compatibility": {
-               "minimum": "1.0.0",
-               "verified": "1.0.0"
-            }
+            "compatibility": [
+               {
+                  "minimum": "1.0.0",
+                  "verified": "1.0.0"
+               }
+            ]
          }
       ],
       "requires": [
@@ -44,9 +48,9 @@
             "type": "module",
             "compatibility": [
                {
-                  "minimum": "1.0.1",
-                  "maximum": "1.0",
-                  "verified": "1.0.1"
+                  "minimum": "1.1.0",
+                  "maximum": "1.1",
+                  "verified": "1.1.0"
                }
             ]
          }
