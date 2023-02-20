@@ -159,7 +159,7 @@ export class RollHandler extends CoreRollHandler {
          }
 
          case 'spendResolve': {
-            return await character.spendResolve(true);
+            return await character.spendResolve(1, 1, true);
          }
 
          case 'toggleInspiration': {
