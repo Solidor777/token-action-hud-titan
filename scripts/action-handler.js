@@ -1,5 +1,5 @@
 // System Module Imports
-import { getSetting, localize } from './utils.js';
+import { getControlledActors, getSetting, localize } from './utils.js';
 
 // Core Module Imports
 import { CoreActionHandler, CoreUtils } from './config.js';
@@ -12,14 +12,16 @@ export default class ActionHandler extends CoreActionHandler {
     * @param {array} subcategoryIds
     * @returns {object}
     */
-   async buildSystemActions(character, subcategoryIds) {
-      const actor = character?.actor;
+   async buildSystemActions(subcategoryIds) {
+      // Set actor and token variables
+      const actors = getControlledActors();
 
       // Single actor actions
-      if (actor) {
-         const actorId = character?.actor?.id;
-         const tokenId = character?.token?.id;
-         return await this._buildSingleCharacterActions(actorId, tokenId, actor, subcategoryIds);
+      if (actors.length === 1) {
+         const actorId = this.actor?.id;
+         const tokenId = this.token?.id;
+         const actions = await this._buildSingleCharacterActions(actorId, tokenId, this.actor, subcategoryIds);
+         return actions;
       }
 
       // Multi character actions

@@ -37,3 +37,11 @@ export async function setSetting(key, value) {
 export function localize(label) {
    return game.i18n.localize(`tokenActionHud.titan.${label}.label`);
 };
+
+export function getControlledActors() {
+   return Array.from(canvas.tokens.controlled.filter(token => token.actor).map((token) => token.actor));
+}
+
+export function getControlledTokens() {
+   return Array.from(canvas.tokens.controlled).filter((token) => token.actor);
+}
