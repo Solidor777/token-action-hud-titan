@@ -1,46 +1,53 @@
 // System Module Imports
-import ActionHandler from './action-handler.js';
-import { RollHandler as Core } from './roll-handler.js';
+import { ActionHandler } from './action-handler.js';
+import { RollHandler } from './roll-handler.js';
 import * as systemSettings from './settings.js';
 import { createDefaults } from './defaults.js';
 
 // Core Module Imports
 import { CoreSystemManager, CoreCategoryManager, CoreUtils } from './config.js';
 
-export class SystemManager extends CoreSystemManager {
-   /** @override */
-   doGetCategoryManager() {
-      return new CoreCategoryManager();
-   }
+export let SystemManager = null;
 
-   /** @override */
-   doGetActionHandler(categoryManager) {
-      return new ActionHandler(categoryManager);
-   }
+Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
+   SystemManager = class SystemManagerClass extends coreModule.api.SystemManager {
+      /** @override */
+      doGetCategoryManager() {
+         return new CoreCategoryManager();
+      }
 
-   /** @override */
-   getAvailableRollHandlers() {
-      const choices = { core: 'Core Titan' };
-      CoreSystemManager.addHandler(choices);
+      /** @override */
+      doGetActionHandler(categoryManager) {
+         return new ActionHandler(categoryManager);
+      }
 
-      return choices;
-   }
+      /** @override */
+      getAvailableRollHandlers() {
+         const choices = { core: 'Core Titan' };
+         CoreSystemManager.addHandler(choices);
 
-   /** @override */
-   doGetRollHandler() {
-      return new Core();
-   }
+         return choices;
+      }
 
-   /** @override */
-   doRegisterSettings(updateFunc) {
-      systemSettings.register(updateFunc);
-   }
+      /** @override */
+      doGetRollHandler() {
+         return new RollHandler();
+      }
 
-   /** @override */
-   async doRegisterDefaultFlags() {
-      const defaults = createDefaults();
-      await CoreUtils.setUserFlag('default', defaults);
-      await CoreUtils.setUserFlag('categories', foundry.utils.deepClone(defaults.categories));
-      await CoreUtils.setUserFlag('subcategories', foundry.utils.deepClone(defaults.subcategories));
-   }
-}
+      /** @override */
+      doRegisterSettings(updateFunc) {
+         systemSettings.register(updateFunc);
+      }
+
+      /** @override */
+      async doRegisterDefaultFlags() {
+         return createDefaults();
+
+         /*
+         await CoreUtils.setUserFlag('default', defaults);
+         await CoreUtils.setUserFlag('categories', foundry.utils.deepClone(defaults.categories));
+         await CoreUtils.setUserFlag('subcategories', foundry.utils.deepClone(defaults.subcategories));
+         */
+      }
+   };
+});
