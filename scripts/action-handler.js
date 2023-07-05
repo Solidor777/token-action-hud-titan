@@ -6,6 +6,20 @@ export let ActionHandler = null;
 
 Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
    ActionHandler = class ActionHandlerClass extends coreModule.api.ActionHandler {
+      _getGroup(data = {}) {
+         if (data?.nestId) {
+            return this.groups[data.nestId];
+         }
+         else {
+            return Object.values(this.groups).find(
+               group =>
+                  (!data.id || group.id === data.id) &&
+                  (!data.type || group.type === data.type) &&
+                  (!data.level || group.level === data.level)
+            );
+         }
+      }
+
       async buildSystemActions(groupIds) {
          // Set actor and token variables
          const actors = getControlledActors();

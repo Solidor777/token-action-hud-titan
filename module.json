@@ -15,8 +15,9 @@
     "scripts/token-action-hud-titan.min.js"
   ],
   "compatibility": {
-    "minimum": "10",
-    "verified": "10.291"
+    "minimum": "11.304",
+    "verified": "11.304",
+    "maximum": "11"
   },
   "languages": [
     {
