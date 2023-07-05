@@ -5,7 +5,7 @@ import * as systemSettings from './settings.js';
 import { createDefaults } from './defaults.js';
 
 // Core Module Imports
-import { CoreSystemManager, CoreCategoryManager, CoreUtils } from './config.js';
+import { CoreSystemManager, CoreCategoryManager } from './config.js';
 
 export let SystemManager = null;
 
