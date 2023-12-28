@@ -1,6 +1,4 @@
-import { Logger } from './config.js';
-
-const namespace = 'token-action-hud-titan';
+import { MODULE } from './constants.js';
 
 /**
  * Get setting value
@@ -11,10 +9,10 @@ const namespace = 'token-action-hud-titan';
 export function getSetting(key, defaultValue = null) {
    let value = defaultValue ?? null;
    try {
-      value = game.settings.get(namespace, key);
+      value = game.settings.get(MODULE.ID, key);
    }
    catch {
-      Logger.debug(`Setting '${key}' not found`);
+      console.error(`Setting '${key}' not found`);
    }
    return value;
 }
@@ -25,12 +23,12 @@ export function getSetting(key, defaultValue = null) {
  * @param {string} value The value
  */
 export async function setSetting(key, value) {
-   if (game.settings.settings.get(`${namespace}.${key}`)) {
-      value = await game.settings.set(namespace, key, value);
-      Logger.debug(`Setting '${key}' set to '${value}'`);
+   if (game.settings.settings.get(`${MODULE.ID}.${key}`)) {
+      value = await game.settings.set(MODULE.ID, key, value);
+      console.error(`Setting '${key}' set to '${value}'`);
    }
    else {
-      Logger.debug(`Setting '${key}' not found`);
+      console.error(`Setting '${key}' not found`);
    }
 }
 

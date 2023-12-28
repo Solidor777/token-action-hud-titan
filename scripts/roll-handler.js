@@ -1,6 +1,4 @@
 // Core Module Imports
-import { CoreUtils } from './config.js';
-
 export let RollHandler = null;
 
 Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
@@ -11,7 +9,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
        * @param {object} event
        * @param {string} encodedValue
        */
-      async doHandleActionEvent(event, encodedValue) {
+      async handleActionClick(event, encodedValue) {
          // Get the payload
          const actionData = encodedValue.split('|');
          if (actionData.length < 3) {
@@ -28,7 +26,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
          // Handle multiple tokens
          if (tokenId === 'multi') {
             for (const token of canvas.tokens.controlled) {
-               const character = CoreUtils.getActor(token.actor?.id, token.id)?.character;
+               const character = coreModule.api.Utils.getActor(token.actor?.id, token.id)?.character;
                if (character) {
                   await this._performAction(actionType, actionData, character);
                }
@@ -39,7 +37,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
 
          // Handle single token
          else {
-            const character = CoreUtils.getActor(actorId, tokenId)?.character;
+            const character = coreModule.api.Utils.getActor(actorId, tokenId)?.character;
             if (character) {
                return await this._performAction(actionType, actionData, character);
             }

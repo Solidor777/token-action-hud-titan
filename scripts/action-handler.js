@@ -1,6 +1,5 @@
 // System Module Imports
 import { getControlledActors, getSetting, localize } from './utils.js';
-import { CoreUtils } from './config.js';
 
 export let ActionHandler = null;
 
@@ -206,7 +205,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
          const groupData = { id: groupId, type: 'system' };
          const group = this._getGroup(groupData);
          group.name = item.name;
-         group.img = CoreUtils.getImage(item);
+         group.img = coreModule.api.Utils.getImage(item);
 
          return await this.addActions([...attacks, ...itemChecks, toggleMultiAttack], groupData);
       }
@@ -255,7 +254,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                   id: `${itemId}|itemCheck`,
                   name: `${item.name} (${check.label})`,
                   encodedValue: [actorId, tokenId, 'itemCheck', itemId, idx].join(this.delimiter),
-                  img: CoreUtils.getImage(item)
+                  img: coreModule.api.Utils.getImage(item)
                });
             });
          });
@@ -285,7 +284,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                   id: `${itemId}|itemCheck`,
                   name: `${item.name} (${check.label})`,
                   encodedValue: [actorId, tokenId, 'itemCheck', itemId, idx].join(this.delimiter),
-                  img: CoreUtils.getImage(item)
+                  img: coreModule.api.Utils.getImage(item)
                });
             });
          });
@@ -337,7 +336,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                id: `${itemId}|castingCheck`,
                name: `${item.name}`,
                encodedValue: [actorId, tokenId, 'castingCheck', itemId].join(this.delimiter),
-               img: CoreUtils.getImage(item)
+               img: coreModule.api.Utils.getImage(item)
             });
 
             // Add item checks
@@ -346,7 +345,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                   id: `${itemId}|itemCheck`,
                   name: `${item.name} (${check.label})`,
                   encodedValue: [actorId, tokenId, 'itemCheck', itemId, checkIdx].join(this.delimiter),
-                  img: CoreUtils.getImage(item)
+                  img: coreModule.api.Utils.getImage(item)
                });
             });
          });

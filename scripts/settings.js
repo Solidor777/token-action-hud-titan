@@ -1,8 +1,11 @@
 /* eslint-disable no-undef */
-export function register(updateFunc) {
-   const appName = 'token-action-hud-titan';
 
-   game.settings.register(appName, 'showUnEquippedEquipment', {
+import { MODULE } from './constants.js';
+
+export function register(updateFunc) {
+   console.log('Token Action HUD TITAN | Registering settings.');
+
+   game.settings.register(MODULE.ID, 'showUnEquippedEquipment', {
       name: game.i18n.localize(
          'tokenActionHud.titan.settings.showUnEquippedEquipment.label'
       ),
@@ -18,7 +21,7 @@ export function register(updateFunc) {
       }
    });
 
-   game.settings.register(appName, 'maxWeapons', {
+   game.settings.register(MODULE.ID, 'maxWeapons', {
       name: game.i18n.localize(
          'tokenActionHud.titan.settings.maxWeapons.label'
       ),
@@ -40,7 +43,7 @@ export function register(updateFunc) {
       }
    });
 
-   game.settings.register(appName, 'maxSpellTraditions', {
+   game.settings.register(MODULE.ID, 'maxSpellTraditions', {
       name: game.i18n.localize(
          'tokenActionHud.titan.settings.maxSpellTraditions.label'
       ),

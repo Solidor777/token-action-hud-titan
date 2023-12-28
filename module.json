@@ -15,8 +15,8 @@
     "scripts/token-action-hud-titan.min.js"
   ],
   "compatibility": {
-    "minimum": "11.304",
-    "verified": "11.304",
+    "minimum": "11.313",
+    "verified": "11.313",
     "maximum": "11"
   },
   "languages": [
@@ -33,7 +33,11 @@
         "id": "titan",
         "type": "system",
         "compatibility": [
-          null
+          {
+            "minimum": "1.0.0",
+            "maximum": "1.0",
+            "verified": "1.0.0"
+          }
         ]
       }
     ],
@@ -42,7 +46,11 @@
         "id": "token-action-hud-core",
         "type": "module",
         "compatibility": [
-          null
+          {
+            "minimum": "1.5.0",
+            "maximum": "1.5",
+            "verified": "1.5.0"
+          }
         ]
       }
     ],

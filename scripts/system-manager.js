@@ -4,49 +4,41 @@ import { RollHandler } from './roll-handler.js';
 import * as systemSettings from './settings.js';
 import { createDefaults } from './defaults.js';
 
-// Core Module Imports
-import { CoreSystemManager, CoreCategoryManager } from './config.js';
-
 export let SystemManager = null;
 
 Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
    SystemManager = class SystemManagerClass extends coreModule.api.SystemManager {
       /** @override */
-      doGetCategoryManager() {
-         return new CoreCategoryManager();
-      }
-
-      /** @override */
-      doGetActionHandler(categoryManager) {
-         return new ActionHandler(categoryManager);
+      getActionHandler() {
+         return new ActionHandler();
       }
 
       /** @override */
       getAvailableRollHandlers() {
          const choices = { core: 'Core Titan' };
-         CoreSystemManager.addHandler(choices);
+         coreModule.api.SystemManager.addHandler(choices);
 
          return choices;
       }
 
       /** @override */
-      doGetRollHandler() {
+      getRollHandler() {
          return new RollHandler();
       }
 
       /** @override */
-      doRegisterSettings(updateFunc) {
-         systemSettings.register(updateFunc);
+      registerSettings(onChangeFunction) {
+         systemSettings.register(onChangeFunction);
       }
 
       /** @override */
-      async doRegisterDefaultFlags() {
+      async registerDefaults() {
          return createDefaults();
 
          /*
-         await CoreUtils.setUserFlag('default', defaults);
-         await CoreUtils.setUserFlag('categories', foundry.utils.deepClone(defaults.categories));
-         await CoreUtils.setUserFlag('subcategories', foundry.utils.deepClone(defaults.subcategories));
+         await coreModule.api.Utils.setUserFlag('default', defaults);
+         await coreModule.api.Utils.setUserFlag('categories', foundry.utils.deepClone(defaults.categories));
+         await coreModule.api.Utils.setUserFlag('subcategories', foundry.utils.deepClone(defaults.subcategories));
          */
       }
    };
