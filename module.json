@@ -1,7 +1,7 @@
 {
   "id": "token-action-hud-titan",
   "title": "Token Action HUD TITAN",
-  "description": "Token Action HUD is a repositionable HUD of actions for a selected token",
+  "description": "Token Action HUD is a repositionable HUD of actions for a selected token.",
   "authors": [
     {
       "name": "Solidor",
