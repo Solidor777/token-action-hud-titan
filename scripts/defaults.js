@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { localize, getSetting } from './utils';
 
 /**

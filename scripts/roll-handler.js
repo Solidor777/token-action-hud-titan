@@ -26,9 +26,9 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
          // Handle multiple tokens
          if (tokenId === 'multi') {
             for (const token of canvas.tokens.controlled) {
-               const character = coreModule.api.Utils.getActor(token.actor?.id, token.id)?.character;
-               if (character) {
-                  await this._performAction(actionType, actionData, character);
+               const actor = coreModule.api.Utils.getActor(token.actor?.id, token.id);
+               if (actor && actor.system.isCharacter) {
+                  await this._performAction(actionType, actionData, actor);
                }
             }
 
@@ -37,16 +37,16 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
 
          // Handle single token
          else {
-            const character = coreModule.api.Utils.getActor(actorId, tokenId)?.character;
-            if (character) {
-               return await this._performAction(actionType, actionData, character);
+            const actor = coreModule.api.Utils.getActor(actorId, tokenId);
+            if (actor && actor.system.isCharacter) {
+               return await this._performAction(actionType, actionData, actor);
             }
          }
 
          return;
       }
 
-      async _performAction(actionType, actionData, character) {
+      async _performAction(actionType, actionData, actor) {
          switch (actionType) {
             // Attribute check
             case 'attributeCheck': {
@@ -56,7 +56,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                   return;
                }
 
-               return await character.rollAttributeCheck({ attribute: attribute }, false);
+               return await actor.system.rollAttributeCheck({ attribute: attribute }, false);
             }
 
             // Resistance check
@@ -67,7 +67,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                   return;
                }
 
-               return await character.rollResistanceCheck({ resistance: resistance }, false);
+               return await actor.system.rollResistanceCheck({ resistance: resistance }, false);
             }
 
             // Skill check
@@ -78,7 +78,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                   return;
                }
 
-               return await character.rollAttributeCheck({ skill: skill }, false);
+               return await actor.system.rollAttributeCheck({ skill: skill }, false);
             }
 
             // Attack check
@@ -97,7 +97,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                   return;
                }
 
-               return await character.rollAttackCheck({ itemId: itemId, attackIdx: attackIdx }, false);
+               return await actor.system.rollAttackCheck(itemId, attackIdx, false);
             }
 
             // Toggle multi attack
@@ -109,7 +109,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                   return;
                }
 
-               return await character.toggleMultiAttack(itemId);
+               return await actor.toggleMultiAttack(itemId);
             }
 
             // Item check
@@ -128,7 +128,7 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                   return;
                }
 
-               return await character.rollItemCheck({ itemId: itemId, checkIdx: checkIdx }, false);
+               return await actor.rollItemCheck(itemId, checkIdx, false);
             }
 
             // Item check
@@ -140,31 +140,31 @@ Hooks.once('tokenActionHudCoreApiReady', async (coreModule) => {
                   return;
                }
 
-               return await character.rollCastingCheck({ itemId: itemId }, false);
+               return await actor.rollCastingCheck(itemId, false);
             }
 
             case 'longRest': {
-               return await character.longRest(true);
+               return await actor.longRest(true);
             }
 
             case 'shortRest': {
-               return await character.shortRest(true);
+               return await actor.shortRest(true);
             }
 
             case 'removeCombatEffects': {
-               return await character.removeCombatEffects(true);
+               return await actor.removeCombatEffects(true);
             }
 
             case 'removeExpiredEffects': {
-               return await character.removeExpiredEffects(false);
+               return await actor.removeExpiredEffects(false);
             }
 
             case 'spendResolve': {
-               return await character.spendResolve(1, 1, true);
+               return await actor.spendResolve(1, 1, true);
             }
 
             case 'toggleInspiration': {
-               return await character.toggleInspiration();
+               return await actor.toggleInspiration();
             }
 
             default: {

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JavaScriptLibraryMappings">
+    <file url="PROJECT" libraries="{@types/jquery, Foundry V11, TITAN VTTRPG, Token Action Hud Core}" />
+  </component>
+</project>

@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Token Action Hud Core" type="javaScript">
+    <properties>
+      <sourceFilesUrls>
+        <item url="file://$PROJECT_DIR$/../token-action-hude-core/scripts" />
+      </sourceFilesUrls>
+    </properties>
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../token-action-hude-core/scripts" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
